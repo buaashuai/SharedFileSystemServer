@@ -1,0 +1,58 @@
+﻿<FileConfig>
+	<rootNode id="tempNode">
+		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器)-->
+		<port>8998</port><!--端口-->
+		<path>D:/EclipseProject/deploy/webapps</path><!--该服务器的存储根路径/OlineSacrifice/static-->
+		<node id="temp" nameType="static" name="temp"><!--缓存文件夹-->
+			<redundancy switch="off"><!--是否进行文件删冗-->
+			</redundancy>
+			<whiteList><!--该节点可以接收文件的白名单-->
+				JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV
+			</whiteList>
+		</node>
+	</rootNode>
+	<rootNode id="storeNode">
+		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器)-->
+		<port>8998</port><!--端口-->
+		<path>D:/EclipseProject/deploy/webapps/static</path><!--该服务器的存储根路径OlineSacrifice-->
+		<node id="filePath" nameType="static" name="OlineSacrificeFiles"><!--网祭平台文件根目录-->
+			<redundancy switch="on"><!--是否进行文件删冗-->
+				<maxElement>100000000</maxElement><!--最大元素数-->
+				<falsePositiveRate>0.00001</falsePositiveRate><!--误报率-->
+				<figureGenType type="client"><!--指纹产生方式-->
+					<property>fingerPrint</property><!--指纹映射属性名-->
+				</figureGenType>
+			</redundancy>
+			<whiteList><!--该节点可以接收文件的白名单-->
+				WMV
+			</whiteList>
+			<node id="category" nameType="static" name="Category"><!--栏目事件文件夹-->
+				<node id="categoryId" nameType="dynamic" property="categoryId"><!--某个栏目-->
+					<node id="event" nameType="dynamic" property="eventId"><!--栏目包括的事件-->
+						<node id="eventAlbum" nameType="static" name="EventAlbum"></node><!--事件相册-->
+						<node id="eventActivity" nameType="dynamic" property="activityId"><!--事件活动-->
+							<node id="eventActivityAlbum" nameType="static" name="ActivityAlbum"></node><!--活动相册-->
+						</node>
+					</node>
+				</node>
+			</node>
+			<node id="user" nameType="static" name="UserFile"><!--用户文件夹-->
+				<node id="userId" nameType="dynamic" property="userId"><!--某个用户-->
+					<node id="personalSubject" nameType="dynamic" property="personalSubjectId"><!--用户创建的个人缅怀专题-->
+						<node id="personalScene" nameType="static" name="personalScene"><!--灵堂场景-->
+							<node id="personalSceneXml" nameType="static" name="personalSceneXml"></node><!--灵堂场景配置文件-->
+							<node id="personalScenePic" nameType="static" name="personalScenePic"></node><!--灵堂场景预览文件-->
+						</node>
+						<node id="personalAlbum" nameType="static" name="PersonalAlbum"></node><!--人物相册-->
+						<node id="personalVideo" nameType="static" name="PersonalVideo"></node><!--人物视频-->
+						<node id="personalActivity" nameType="dynamic" property="activityId"><!--个人缅怀专题的某个活动-->
+							<node id="personalActivityAlbum" nameType="static" name="ActivityAlbum"></node><!--活动相册-->
+							<node id="personalActivityVideo" nameType="static" name="ActivityVideo"></node><!--活动视频-->
+						</node>
+					</node>
+					<node id="genealogy" nameType="static" name="Genealogy"></node><!--用户的家谱成员头像-->
+				</node>
+			</node>
+		</node>
+	</rootNode>
+</FileConfig>

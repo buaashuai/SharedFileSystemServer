@@ -1,0 +1,42 @@
+﻿<FileConfig>
+	<rootNode>
+		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器)-->
+		<port>8998</port><!--端口-->
+		<path>D:/EclipseProject/deploy/webapps/technology/static</path><!--该服务器的存储根路径-->
+		<node id="temp" nameType="static" name="temp"><!--缓存文件夹-->
+			<redundancy switch="off"><!--是否进行文件删冗-->
+			</redundancy>
+			<whiteList><!--该节点可以接收文件的白名单-->
+				JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV,DOCX,PDF,ZIP,RAR
+			</whiteList>
+		</node>
+	</rootNode>
+	<rootNode>
+		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器)-->
+		<port>8998</port><!--端口-->
+		<path>D:/EclipseProject/deploy/webapps/technology/static</path><!--该服务器的存储根路径-->
+		<node id="filePath" nameType="static" name="TechnologyFiles"><!--科技平台文件根目录-->
+			<redundancy switch="on"><!--是否进行文件删冗-->
+				<maxElement>100000000</maxElement><!--最大元素数-->
+				<falsePositiveRate>0.00001</falsePositiveRate><!--误报率-->
+				<figureGenType type="client"><!--指纹产生方式-->
+					<property>fingerPrint</property><!--指纹映射属性名-->
+				</figureGenType>
+			</redundancy>
+			<node id="organization" nameType="static" name="Organization"><!--机构文件夹-->
+				<node id="organizationId" nameType="dynamic" property="organizationId"><!--某个机构-->
+					<node id="organizationAlbum" nameType="static" name="OrganizationAlbum"></node><!--机构相册-->
+					<node id="businessLicense" nameType="static" name="BusinessLicense"></node><!--营业执照扫描件-->
+					<node id="organizationCode" nameType="static" name="OrganizationCode"></node><!--机构代码扫描件-->
+					<node id="otherLicense" nameType="static" name="OtherLicense"></node><!--其他资质证明材料扫描件-->
+					<node id="ourSiteLicense" nameType="static" name="OurSiteLicense"></node><!--101网协议扫描件-->
+					<node id="productId" nameType="dynamic" property="productId"><!--该机构的某个产品-->
+						<node id="productAlbum" nameType="static" name="ProductAlbum"></node><!--产品相册-->
+						<node id="productVideo" nameType="static" name="ProductVideo"></node><!--产品视频-->
+						<node id="productDocument" nameType="static" name="ProductDocument"></node><!--产品说明-->
+					</node>
+				</node>
+			</node>
+		</node>
+	</rootNode>
+</FileConfig>

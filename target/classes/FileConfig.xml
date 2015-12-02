@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<FileConfig>
+
+	<serverNode id="tempNode"><!-- 缓存服务器节点 -->
+		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器) 192.168.192.100-->
+		<port>21</port><!--ftp端口-->
+		<serverPort>9998</serverPort><!--该服务器上的文件系统端口-->
+		<userName>Administrator</userName><!-- 该服务器的登录用户名 Administrator-->
+		<password>0987654321</password><!-- 该服务器的登录密码 -->
+		<directoryNode id="tempStoreNode" storePath="D:/EclipseProject/deploy/webapps/OlineSacrifice/static"><!--该服务器的存储根路径 -->
+			<directoryNode id="temp" nameType="static" name="temp"><!--缓存文件夹 -->
+				<redundancy switch="off"><!--是否进行文件删冗 -->
+					<maxElement>50000000</maxElement><!--最大元素数 -->
+					<falsePositiveRate>0.00001</falsePositiveRate><!--误报率 -->
+					<fingerGenType type="server"><!--指纹产生方式 -->
+						<property>fingerPrint</property><!--指纹映射属性名 -->
+					</fingerGenType>
+				</redundancy>
+				<whiteList><!--该节点可以接收文件的白名单 -->
+					JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT
+				</whiteList>
+			</directoryNode>
+		</directoryNode>
+		<backupNode id="backup1">
+			<ip>10.24.208.103</ip><!--节点存储位置(本地/远程服务器) 192.168.192.100-->
+			<port>21</port><!--ftp端口-->
+			<serverPort>9998</serverPort><!--该服务器上的文件系统端口-->
+			<userName>dell</userName><!-- 该服务器的登录用户名 -->
+			<password>0987654321</password><!-- 该服务器的登录密码 -->
+		</backupNode>
+		<backupNode id="backup2">
+			<ip>10.24.208.103</ip><!--节点存储位置(本地/远程服务器) 192.168.192.100-->
+			<port>21</port><!--ftp端口-->
+			<serverPort>9998</serverPort><!--该服务器上的文件系统端口-->
+			<userName>dell</userName><!-- 该服务器的登录用户名 -->
+			<password>0987654321</password><!-- 该服务器的登录密码 -->
+		</backupNode>
+	</serverNode>
+	
+	<serverNode id="renderNode"><!-- 渲染场景存储服务器节点 -->
+		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器)10.24.190.12-->
+		<port>21</port><!--ftp端口-->
+		<serverPort>9998</serverPort><!--该服务器上的文件系统端口-->
+		<userName>dell</userName><!-- 该服务器的登录用户名 -->
+		<password>0987654321</password><!-- 该服务器的登录密码 -->
+		<directoryNode id="renderStoreNode" storePath="D:/EclipseProject/deploy/webapps/OlineSacrifice/static"><!--该服务器的存储根路径 -->
+			<directoryNode id="renderConfig" nameType="static" name="RenderConfig"><!-- 官方场景配置文件 -->
+				<directoryNode id="sceneType" nameType="dynamic" property="sceneTypeId"><!--官方的灵堂场景配置文件 -->
+					<directoryNode id="hallType" nameType="dynamic" property="hallTypeId"></directoryNode><!--官方的场景对应的灵堂配置文件 -->
+				</directoryNode>
+			</directoryNode>
+		</directoryNode>
+	</serverNode>
+	
+	<serverNode id="storeNode"><!-- 文件存储服务器节点 -->
+		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器) 192.168.192.100-->
+		<port>21</port><!--ftp端口-->
+		<serverPort>9998</serverPort><!--该服务器上的文件系统端口-->
+		<userName>dell</userName><!-- 该服务器的登录用户名 -->
+		<password>0987654321</password><!-- 该服务器的登录密码 -->
+		<directoryNode id="fileStoreNode" storePath="D:/EclipseProject/deploy/webapps/OlineSacrifice/static"><!--该服务器的存储根路径 -->
+			<directoryNode id="filePath" nameType="static" name="OlineSacrificeFiles"><!--网祭平台文件根目录 -->
+				<redundancy switch="on"><!--是否进行文件删冗  on | off-->
+					<maxElement>50000000</maxElement><!--最大元素数 -->
+					<falsePositiveRate>0.00001</falsePositiveRate><!--误报率 -->
+					<fingerGenType type="server"><!--指纹产生方式 server | client-->
+						<property>fingerPrint</property><!--指纹映射属性名 -->
+					</fingerGenType>
+				</redundancy>
+				<whiteList><!--该节点可以接收文件的白名单 -->
+					ANY
+				</whiteList>
+				<directoryNode id="category" nameType="static" name="Category"><!--栏目事件文件夹 -->
+					<directoryNode id="categoryId" nameType="dynamic" property="categoryId"><!--某个栏目 -->
+						<directoryNode id="event" nameType="dynamic" property="eventId"><!--栏目包括的事件 -->
+							<directoryNode id="eventAlbum" nameType="static" name="EventAlbum"></directoryNode><!--事件相册 -->
+							<directoryNode id="eventActivity" nameType="dynamic" property="activityId"><!--事件活动 -->
+								<directoryNode id="eventActivityAlbum" nameType="static" name="ActivityAlbum"></directoryNode><!--活动相册 -->
+							</directoryNode>
+						</directoryNode>
+					</directoryNode>
+				</directoryNode>
+				<directoryNode id="user" nameType="static" name="UserFile"><!--用户文件夹 -->
+					<directoryNode id="userId" nameType="dynamic" property="userId"><!--某个用户 -->
+						<directoryNode id="personalSubject" nameType="dynamic" property="personalSubjectId"><!--用户创建的个人缅怀专题 -->
+							<directoryNode id="personalScene" nameType="static" name="personalScene"></directoryNode><!--灵堂场景配置文件 -->
+							<directoryNode id="personalAlbum" nameType="static" name="PersonalAlbum"></directoryNode><!--人物相册 -->
+							<directoryNode id="personalVideo" nameType="static" name="PersonalVideo"></directoryNode><!--人物视频 -->
+							<directoryNode id="personalActivity" nameType="dynamic" property="activityId"><!--个人缅怀专题的某个活动 -->
+								<directoryNode id="personalActivityAlbum" nameType="static" name="ActivityAlbum"></directoryNode><!--活动相册 -->
+								<directoryNode id="personalActivityVideo" nameType="static" name="ActivityVideo"></directoryNode><!--活动视频 -->
+							</directoryNode>
+						</directoryNode>
+						<directoryNode id="genealogyEvent" nameType="static" name="GenealogyEvent"></directoryNode><!--用户的家族事件头像 -->
+						<directoryNode id="familyCommunity" nameType="static" name="FamilyCommunity"><!--用户的家族社区 -->
+							<directoryNode id="familyCommunityId" nameType="dynamic" property="familyCommunityId">
+								<directoryNode id="genealogy" nameType="static" name="Genealogy"></directoryNode><!--家谱成员头像 -->
+								<directoryNode id="communityAlbum" nameType="static" name="communityAlbum"></directoryNode><!--家族社区相册 -->
+							</directoryNode>
+						</directoryNode>
+					</directoryNode>
+				</directoryNode>
+			</directoryNode>
+
+			<directoryNode id="technologyFilePath" nameType="static" name="TechnologyFiles"><!--科技平台文件根目录-->
+				<directoryNode id="organization" nameType="static" name="Organization"><!--科技平台的机构信息文件夹-->
+					<directoryNode id="organizationId" nameType="dynamic" property="organizationId"><!-- 机构文件夹-->
+						<directoryNode id="organizationAlbum" nameType="static" name="OrganizationAlbum"></directoryNode><!-- 机构相册文件夹-->
+						<directoryNode id="organizationVideo" nameType="static" name="OrganizationVideo"></directoryNode><!-- 机构视频文件夹-->
+						<directoryNode id="licenseInfo" nameType="static" name="LicenseInfo"><!-- 机构资质认证材料文件夹-->
+							<directoryNode id="businessLicense" nameType="static" name="BusinessLicense"></directoryNode><!--机构营业执照扫描件-->
+							<directoryNode id="organizationCode" nameType="static" name="OrganizationCode"></directoryNode><!--机构代码扫描件-->
+							<directoryNode id="otherLicense" nameType="static" name="OtherLicense"></directoryNode><!--其他资质证明材料扫描件-->
+							<directoryNode id="ourSiteLicense" nameType="static" name="OurSiteLicense"></directoryNode><!--101网协议扫描件-->
+						</directoryNode>
+						<directoryNode id="policyInfo" nameType="static" name="PolicyInfo"></directoryNode><!--机构发布的政策信息文件夹-->
+						<directoryNode id="productInfo" nameType="static" name="ProductInfo"><!--机构发布的产品信息文件夹-->
+							<directoryNode id="productId" nameType="dynamic" property="productId"><!-- 产品信息文件夹-->
+								<directoryNode id="productAlbum" nameType="static" name="ProductAlbum"></directoryNode><!--产品相册-->
+								<directoryNode id="productVideo" nameType="static" name="ProductVideo"></directoryNode><!--产品视频-->
+								<directoryNode id="productDocument" nameType="static" name="ProductDocument"></directoryNode><!--产品文档-->
+							</directoryNode>
+						</directoryNode>
+					</directoryNode>
+				</directoryNode>
+			</directoryNode>
+
+			<directoryNode id="cultureFilePath" nameType="static" name="CultureFiles"><!--文化平台文件根目录-->
+				<directoryNode id="bookInfo" nameType="static" name="BookInfo"><!-- 电子书信息文件夹-->
+					<directoryNode id="book" nameType="static" name="Book"></directoryNode><!--电子书-->
+					<directoryNode id="bookCover" nameType="static" name="BookCover"></directoryNode><!--电子书封面-->
+				</directoryNode>
+			</directoryNode>
+		</directoryNode>
+	</serverNode>
+</FileConfig>
