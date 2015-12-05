@@ -1,4 +1,4 @@
-package pers.sharedFileSystem.entity;
+package pers.sharedFileSystem.communicationObject;
 
 import java.io.Serializable;
 import java.util.Hashtable;

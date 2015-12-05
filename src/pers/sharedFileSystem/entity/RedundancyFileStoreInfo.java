@@ -8,9 +8,9 @@ import java.util.ArrayList;
  */
 public class RedundancyFileStoreInfo implements Serializable{
     /**
-     * 节目录节点相对路径（相对该节点的根存储根路径）
+     * 该节点相对路径（相对该节点的存储根路径）
      */
-    public String essentialStorePath;
+    public String relativeStorePath;
     /**
      * 该目录节点下的存储在其他文件夹里面的冗余文件的相对路径
      */

@@ -307,8 +307,7 @@ public class ConfigParse {
         }
         Element element = doc.getRootElement();
         SystemConfig systemConfig = new SystemConfig();
-        systemConfig.FileSystemPort = Integer.parseInt(element.getChildText("fileSystemPort"));
-        systemConfig.ServerNodeName = element.getChildText("serverNodeName");
+        systemConfig.Port = Integer.parseInt(element.getChildText("port"));
         Config.SYSTEMCONFIG = systemConfig;
     }
 }

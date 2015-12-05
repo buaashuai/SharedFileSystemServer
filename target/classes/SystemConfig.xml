@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <SystemConfig>
-		<fileSystemPort>9998</fileSystemPort><!-- 存储服务器上的文件系统监听端口 -->
-		<serverNodeName>storeNode</serverNodeName><!-- 当前存储服务器的服务器节点编号 -->
+		<port>9998</port><!-- 冗余验证服务器监听端口 -->
 </SystemConfig>

@@ -10,7 +10,7 @@
     <archive path="C:/Users/dell/.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar" />
   </library>
   <library name="lib">
-    <archive path="D:/GitProject/SharedFileSystem/lib/json-lib-2.4-jdk15.jar" />
+    <archive path="D:/GitProject/SharedFileSystemServer/lib/json-lib-2.4-jdk15.jar" />
   </library>
   <library name="Maven: net.sf.ezmorph:ezmorph:1.0.6">
     <archive path="C:/Users/dell/.m2/repository/net/sf/ezmorph/ezmorph/1.0.6/ezmorph-1.0.6.jar" />

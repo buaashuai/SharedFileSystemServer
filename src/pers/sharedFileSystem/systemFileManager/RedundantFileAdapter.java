@@ -3,7 +3,6 @@ package pers.sharedFileSystem.systemFileManager;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.entity.DirectoryNode;
-import pers.sharedFileSystem.entity.FingerprintInfo;
 import pers.sharedFileSystem.entity.RedundancyFileStoreInfo;
 import pers.sharedFileSystem.logManager.LogRecord;
 
@@ -87,7 +86,7 @@ public class RedundantFileAdapter {
                 object = oip.readObject();
                 if (object instanceof RedundancyFileStoreInfo) { // 安全起见，这里需要判断对象类型
                     RedundancyFileStoreInfo tmp=(RedundancyFileStoreInfo)object;
-                    if(tmp.essentialStorePath.equals(filePath))
+                    if(tmp.relativeStorePath.equals(filePath))
                         return tmp;
                 }
             }

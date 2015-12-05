@@ -1,4 +1,4 @@
-package pers.sharedFileSystem.entity;
+package pers.sharedFileSystem.communicationObject;
 
 import java.io.Serializable;
 
@@ -27,4 +27,8 @@ public enum MessageType implements Serializable {
      * 返回向存储服务器发送添加映射信息指令结果
      */
     REPLY_ADD_REDUNDANCY_INFO,
+    /**
+     * 长连接保持
+     */
+    KEEP_ALIVE,
 }

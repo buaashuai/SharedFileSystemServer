@@ -23,6 +23,9 @@ public class FingerprintAdapter {
         FileOutputStream fout=null;
         ObjectOutputStream sout =null;
         String filePath= ((DirectoryNode)Config.getNodeByNodeId(directoryNodeId)).StorePath;//指纹信息的保存路径
+        ((DirectoryNode) Config.getNodeByNodeId(directoryNodeId)).print("");
+        System.out.println("directoryNodeId="+directoryNodeId);
+        System.out.println("filePath="+filePath);
         String fileName=Common.FINGERPRINT_NAME;
         if(!CommonUtil.validateString(filePath)){
             LogRecord.FileHandleErrorLogger.error("save Fingerprint error, filePath is null.");

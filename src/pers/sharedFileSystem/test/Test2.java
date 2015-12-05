@@ -17,8 +17,6 @@ import pers.sharedFileSystem.entity.FingerprintInfo;
 import pers.sharedFileSystem.entity.ServerNode;
 import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
-import pers.sharedFileSystem.shareInterface.DirectoryAdapter;
-import pers.sharedFileSystem.shareInterface.FileAdapter;
 
 public class Test2 {
 
@@ -65,19 +63,19 @@ public class Test2 {
 		map.put("hehe","2");
 		map.put("sceneTypeId","1");
 		map.put("hallTypeId","7");
-		FileAdapter fileAdapter = new FileAdapter("hallType","1.txt",map);
-		JSONObject re = fileAdapter.saveFileTo("hallType",
-				"23.txt", map);
-		System.out.println(re);
-		FileAdapter fileAdapter2 = new FileAdapter("hallType","2.txt",map);
-		JSONObject re2 = fileAdapter.saveFileTo("hallType",
-				"24.txt", map);
-		System.out.println(re2);
-		if (re.getInt("Errorcode") != 3000) {
-			System.out.println("false");
-		} else {
-			System.out.println("success");
-		}
+//		FileAdapter fileAdapter = new FileAdapter("hallType","1.txt",map);
+//		JSONObject re = fileAdapter.saveFileTo("hallType",
+//				"23.txt", map);
+//		System.out.println(re);
+//		FileAdapter fileAdapter2 = new FileAdapter("hallType","2.txt",map);
+//		JSONObject re2 = fileAdapter.saveFileTo("hallType",
+//				"24.txt", map);
+//		System.out.println(re2);
+//		if (re.getInt("Errorcode") != 3000) {
+//			System.out.println("false");
+//		} else {
+//			System.out.println("success");
+//		}
 	}
 
 	/**
@@ -91,16 +89,16 @@ private void deleteFileTest() throws Exception {
 	map.put("hehe","2");
 	map.put("sceneTypeId","1");
 	map.put("hallTypeId","7");
-	DirectoryAdapter dicAdapter = new DirectoryAdapter("hehe", map);
-	List<String> fileNames=new ArrayList<String>();
-	fileNames.add("1.txt");
+//	DirectoryAdapter dicAdapter = new DirectoryAdapter("hehe", map);
+//	List<String> fileNames=new ArrayList<String>();
+//	fileNames.add("1.txt");
 //	fileNames.add("24.txt");
 //	FileAdapter fileAdapter = new FileAdapter("hehe",
 //			"2.jpg", map);
 //	FileAdapter fileAdapter2 = new FileAdapter("hehe",
 //			"4.jpg", map);
-	JSONObject re1 =dicAdapter.deleteSelective(fileNames);
-	System.out.println(re1);
+//	JSONObject re1 =dicAdapter.deleteSelective(fileNames);
+//	System.out.println(re1);
 //	JSONObject re2 =fileAdapter.delete();
 //	System.out.println(re2);
 //	JSONObject re3 =fileAdapter2.delete();
@@ -117,11 +115,11 @@ private void deleteFileTest() throws Exception {
 		map.put("hallTypeId", "3");
 		map.put("categoryId", "5");
 		map.put("hehe","2");
-		DirectoryAdapter dicAdapter = new DirectoryAdapter("tempStoreNode", map);
-		List<String> fileNames=dicAdapter.getAllFileNames();
-		for(String str:fileNames){
-			System.out.println(str);
-		}
+//		DirectoryAdapter dicAdapter = new DirectoryAdapter("tempStoreNode", map);
+//		List<String> fileNames=dicAdapter.getAllFileNames();
+//		for(String str:fileNames){
+//			System.out.println(str);
+//		}
 	}
 
 	/**
@@ -133,9 +131,9 @@ private void deleteFileTest() throws Exception {
 		map.put("hallTypeId", "3");
 		map.put("categoryId", "5");
 		map.put("hehe","2");
-		DirectoryAdapter dicAdapter = new DirectoryAdapter("categoryId", map);
-		JSONArray re=dicAdapter.getAllFilePaths();
-		System.out.println(re);
+//		DirectoryAdapter dicAdapter = new DirectoryAdapter("categoryId", map);
+//		JSONArray re=dicAdapter.getAllFilePaths();
+//		System.out.println(re);
 	}
 	/**
 	 * 配置文件解析测试

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SharedFileSystem.iml" filepath="$PROJECT_DIR$/SharedFileSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SharedFileSystemServer.iml" filepath="$PROJECT_DIR$/SharedFileSystemServer.iml" />
     </modules>
   </component>
 </project>
