@@ -308,6 +308,7 @@ public class ConfigParse {
         Element element = doc.getRootElement();
         SystemConfig systemConfig = new SystemConfig();
         systemConfig.Port = Integer.parseInt(element.getChildText("port"));
+        systemConfig.StorePath = element.getChildText("storePath");
         Config.SYSTEMCONFIG = systemConfig;
     }
 }

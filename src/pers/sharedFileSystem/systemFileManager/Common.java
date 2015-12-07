@@ -5,10 +5,6 @@ package pers.sharedFileSystem.systemFileManager;
  */
 public class Common {
     /**
-     * 系统文件存储文件夹名
-     */
-    public final static String SYSTEM_FILE_FOLDER_Name="sysInfo";
-    /**
      * 指纹信息文件存储名称
      */
     public final static String FINGERPRINT_NAME="Fingerprint.sys";

@@ -2,8 +2,7 @@ package pers.sharedFileSystem.systemFileManager;
 
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
-import pers.sharedFileSystem.entity.DirectoryNode;
-import pers.sharedFileSystem.entity.FingerprintInfo;
+import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.logManager.LogRecord;
 
 import java.io.*;
@@ -16,25 +15,22 @@ import java.util.List;
 public class FingerprintAdapter {
     /**
      * 按照序列化的方式将指纹信息保存到磁盘
-     * @param  directoryNodeId 客户端上传文件的节点编号（客户端将文件上传到该节点下）
      * @param fingerprintInfo 待保存的指纹信息
      */
-    public void saveFingerprint(String directoryNodeId,FingerprintInfo fingerprintInfo){
+    public void saveFingerprint(FingerprintInfo fingerprintInfo){
         FileOutputStream fout=null;
         ObjectOutputStream sout =null;
-        String filePath= ((DirectoryNode)Config.getNodeByNodeId(directoryNodeId)).StorePath;//指纹信息的保存路径
-        ((DirectoryNode) Config.getNodeByNodeId(directoryNodeId)).print("");
-        System.out.println("directoryNodeId="+directoryNodeId);
-        System.out.println("filePath="+filePath);
+        String filePath=Config.SYSTEMCONFIG.StorePath;//指纹信息的保存路径
         String fileName=Common.FINGERPRINT_NAME;
         if(!CommonUtil.validateString(filePath)){
             LogRecord.FileHandleErrorLogger.error("save Fingerprint error, filePath is null.");
             return;
         }
-        filePath+="/"+Common.SYSTEM_FILE_FOLDER_Name;
         File file = new File(filePath);
-        if (!file.exists() && !file.isDirectory())
-            file.mkdir();//如果系统文件夹不存在，就建立系统文件夹
+        if (!file.exists() && !file.isDirectory()) {//如果系统文件夹不存在
+            LogRecord.RunningErrorLogger.error("save Fingerprint error, filePath illegal.");
+            return;
+        }
         try{
             fout= new FileOutputStream(filePath+"/"+fileName, true);
             sout= new ObjectOutputStream(fout);
@@ -57,12 +53,11 @@ public class FingerprintAdapter {
 
     /**
      * 根据被保存文件的目的节点编号和指纹信息查找该指纹信息对应的文件存储信息
-     * @param desNodeId 被保存文件的目的节点编号
      * @param md5 指纹信息
      * @return 该指纹信息对应的文件存储信息
      */
-    public FingerprintInfo getFingerprintInfoByMD5(String desNodeId,String md5){
-        String filePath= ((DirectoryNode)Config.getNodeByNodeId(desNodeId)).StorePath;//指纹信息的保存路径
+    public FingerprintInfo getFingerprintInfoByMD5(String md5){
+        String filePath=Config.SYSTEMCONFIG.StorePath;//指纹信息的保存路径
         String fileName=Common.FINGERPRINT_NAME;
         FileInputStream fin = null;
         BufferedInputStream bis =null;
@@ -71,10 +66,9 @@ public class FingerprintAdapter {
             LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
             return null;
         }
-        filePath+="/"+Common.SYSTEM_FILE_FOLDER_Name;
         File file = new File(filePath);
-        if (!file.isDirectory())
-            return null;//如果系统文件夹不存在
+        if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists())
+            return null;//如果系统文件夹不存在或者指纹信息文件不存在
         try{
             fin = new FileInputStream(filePath+"/"+fileName);
             bis = new BufferedInputStream(fin);
@@ -124,16 +118,15 @@ public class FingerprintAdapter {
         FileInputStream fin = null;
         BufferedInputStream bis =null;
         ObjectInputStream oip=null;
-        String filePath= ((DirectoryNode)Config.getNodeByNodeId(directoryNodeId)).StorePath;//指纹信息的保存路径
+        String filePath=Config.SYSTEMCONFIG.StorePath;//指纹信息的保存路径
         String fileName=Common.FINGERPRINT_NAME;
         if(!CommonUtil.validateString(filePath)){
             LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
             return fingerprintInfos;
         }
-        filePath+="/"+Common.SYSTEM_FILE_FOLDER_Name;
         File file = new File(filePath);
-        if (!file.isDirectory())
-            return fingerprintInfos;//如果系统文件夹不存在
+        if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists())
+            return fingerprintInfos;//如果系统文件夹不存在或者指纹信息文件不存在
         try{
             fin = new FileInputStream(filePath+"/"+fileName);
             bis = new BufferedInputStream(fin);

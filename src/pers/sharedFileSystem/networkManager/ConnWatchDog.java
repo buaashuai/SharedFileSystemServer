@@ -25,7 +25,13 @@ public class ConnWatchDog implements Runnable {
 	private SystemConfig systemConfig = Config.SYSTEMCONFIG;
 
 	public ConnWatchDog() {
+		run=true;
 	}
+
+	/**
+	 * 冗余验证服务器是否运行
+	 */
+	private volatile boolean run;
 
 	private ServerSocket serverSocket;
 
@@ -33,6 +39,7 @@ public class ConnWatchDog implements Runnable {
 	 * 停止服务端监听
 	 */
 	public void shutDownSocket() {
+		run=false;
 		if (serverSocket != null)
 			try {
 				serverSocket.close();
@@ -43,19 +50,22 @@ public class ConnWatchDog implements Runnable {
 		for (SocketAction socketAction : threads.keySet()) {
 			socketAction.overThis();
 		}
+		threads.clear();
 	}
 
 	public void run() {
 		serverSocket = null;
 		try {
 			serverSocket = new ServerSocket(systemConfig.Port, 5);
-			LogRecord.RunningInfoLogger.info("server started.");
+			LogRecord.RunningInfoLogger.info("redundancy server started.");
+			while(run) {
 				Socket s = serverSocket.accept();
-			LogRecord.RunningInfoLogger.info("client connected.");
+				LogRecord.RunningInfoLogger.info("new client connect [" + s.getInetAddress() + "]");
 				SocketAction socketAction = new SocketAction(s);
 				Thread thread = new Thread(socketAction);
 				threads.put(socketAction, thread);
 				thread.start();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

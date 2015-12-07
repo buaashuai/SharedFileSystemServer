@@ -9,6 +9,11 @@ public class SystemConfig {
      */
     public Integer Port;
 
+    /**
+     * 指纹信息存储路径
+     */
+    public String StorePath;
+
     public SystemConfig(){
 
     }
@@ -20,5 +25,6 @@ public class SystemConfig {
      */
     public void print(String tabs) {
         System.out.println(tabs + "Port: " + Port);
+        System.out.println(tabs + "StorePath: " + StorePath);
     }
 }

@@ -10,7 +10,7 @@ import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
 import pers.sharedFileSystem.communicationObject.MessageProtocol;
 import pers.sharedFileSystem.communicationObject.MessageType;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
-import pers.sharedFileSystem.entity.FingerprintInfo;
+import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.logManager.LogRecord;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
 import pers.sharedFileSystem.systemFileManager.MessageCodeHandler;
@@ -47,33 +47,27 @@ public class SocketAction implements Runnable {
 	 * @return
 	 */
 	private MessageProtocol doCheckRedundancyAction(MessageProtocol mes){
-		String figurePrint=mes.content.get("figurePrint");
-		String desNodeId=mes.content.get("desNodeId");
+		FingerprintInfo figurePrint=(FingerprintInfo)mes.content;
 		MessageProtocol reMessage=new MessageProtocol();
-		if(!CommonUtil.validateString(figurePrint)){
-			reMessage.messageType=MessageType.REPLY_CHECK_REDUNDANCY;
-			reMessage.content.put("messageCode","4001");
-			LogRecord.FileHandleInfoLogger.info(MessageCodeHandler.getMessageInfo(4001, ""));
-			return reMessage;
-		}
+		//是否找到重复的文件指纹
 		String reMes="";
 		//验证指纹
-		if(BloomFilter.getInstance().isFingerPrintExist(figurePrint)) {
+		if(BloomFilter.getInstance().isFingerPrintExist(figurePrint.Md5)) {
 			//此处应该返回指纹信息对应的文件的绝对路径
-			FingerprintInfo fingerprintInfo=new FingerprintAdapter().getFingerprintInfoByMD5(desNodeId,figurePrint);
+			/**************************/
+			FingerprintInfo fingerprintInfo=new FingerprintInfo();//new FingerprintAdapter().getFingerprintInfoByMD5(figurePrint);
 			if(fingerprintInfo==null){
 				reMes="false";
-				reMessage.content.put("messageCode","4003");
+				reMessage.messageCode=4002;
 			}else {
-				reMessage.content.put("messageCode","4000");
-				reMessage.content.put("filePath", fingerprintInfo.FilePath+fingerprintInfo.FileName);
-				reMes = "true";
-				LogRecord.RunningInfoLogger.info(figurePrint+" upload rapidly.");
+				reMessage.messageCode=4000;
+//				reMessage.content.put("filePath", fingerprintInfo.FilePath+fingerprintInfo.FileName);
+				reMes = "true  , file upload rapidly.";
 			}
 		}
 		else {
 			reMes="false";
-			reMessage.content.put("messageCode","4002");
+			reMessage.messageCode=4001;
 		}
 		reMessage.messageType=MessageType.REPLY_CHECK_REDUNDANCY;
 		LogRecord.FileHandleInfoLogger.info("BloomFilter check redundancy ["+figurePrint+"] "+reMes);
@@ -85,15 +79,16 @@ public class SocketAction implements Runnable {
 	 * @return
 	 */
 	private MessageProtocol doAddFingerprintAction(MessageProtocol mes){
-		String figurePrint=mes.content.get("figurePrint");
-		String filePath=mes.content.get("FilePath");
-		String fileName=mes.content.get("FileName");
-		String desNodeId=mes.content.get("desNodeId");
-		FingerprintInfo fInfo=new FingerprintInfo(figurePrint,filePath,fileName);
-		if(CommonUtil.validateString(figurePrint)) {
-			new FingerprintAdapter().saveFingerprint(desNodeId,fInfo);
-			BloomFilter.getInstance().addFingerPrint(figurePrint);
-			LogRecord.FileHandleInfoLogger.info("BloomFilter add a new fingerPrint ["+figurePrint+"]");
+		FingerprintInfo fInfo=(FingerprintInfo)mes.content;//new FingerprintInfo(figurePrint,filePath,fileName);
+		MessageProtocol reMessage=new MessageProtocol();
+		if(fInfo!=null) {
+			new FingerprintAdapter().saveFingerprint(fInfo);
+			LogRecord.FileHandleInfoLogger.info("BloomFilter save a new fingerPrint to disk ["+fInfo.Md5+"]");
+			BloomFilter.getInstance().addFingerPrint(fInfo.Md5);
+			LogRecord.FileHandleInfoLogger.info("BloomFilter add a new fingerPrint ["+fInfo.Md5+"]");
+			reMessage.messageType=MessageType.REPLY_ADD_FINGERPRINT;
+			reMessage.messageCode=4000;
+			return reMessage;
 		}
 		return null;
 	}

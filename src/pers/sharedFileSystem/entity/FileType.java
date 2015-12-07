@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 文件类型枚取
- * 
+ *
  * @author buaashuai
  */
 public enum FileType implements Serializable {
@@ -12,6 +12,10 @@ public enum FileType implements Serializable {
 	 * 所有文件类型
 	 */
 	ANY("0000000000"),
+	/**
+	 * 无法确定文件类型
+	 */
+	UNCERTAIN("??????????"),
 	/**
 	 * JEPG.jpg
 	 */
@@ -263,7 +267,7 @@ public enum FileType implements Serializable {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param type
 	 */
 	FileType(String value) {

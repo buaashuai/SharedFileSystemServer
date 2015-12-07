@@ -2,13 +2,12 @@ package pers.sharedFileSystem.bloomFilterManager;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Set;
 
 import pers.sharedFileSystem.bloomFilterManager.hashFunctions.*;
+import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.entity.*;
@@ -47,17 +46,16 @@ public class BloomFilter {
 	 * 根据配置文件计算系统需要的hash函数个数（validHashFunctionNum），和布隆过滤器需要的槽数（Slot_SIZE）
 	 */
 	private void calculateHashFunctionNum(){
-		String serverNodeName=Config.SYSTEMCONFIG.ServerNodeName;
-		Node n=Config.getNodeByNodeId(serverNodeName);
-		if(n==null||n instanceof DirectoryNode) {
-			LogRecord.FileHandleErrorLogger.error("["+serverNodeName+"] is not a ServerNode id");
-			return;
+		double maxElement=0, falsePositiveRate=Double.MAX_VALUE;
+		for(ServerNode sNode:Config.getConfig().values()){
+			RedundancyInfo  serverRedundancy=sNode.ServerRedundancy;
+			maxElement+=serverRedundancy.MaxElementNum;
+			falsePositiveRate=Math.min(falsePositiveRate,serverRedundancy.FalsePositiveRate);
 		}
-		ServerNode node=(ServerNode)n;
-		RedundancyInfo  serverRedundancy=node.ServerRedundancy;
-		double m=serverRedundancy.MaxElementNum*(Math.log(serverRedundancy.FalsePositiveRate)/Math.log(0.6185));
+		System.out.println("m="+maxElement+" p="+falsePositiveRate);
+		double m=maxElement*(Math.log(falsePositiveRate)/Math.log(0.6185));
 		Slot_SIZE =(int)m;
-		double k=0.7*m/serverRedundancy.MaxElementNum;
+		double k=0.7*m/maxElement;
 		validHashFunctionNum=(int)(k+1);
 		LogRecord.RunningInfoLogger.info("BloomFilter need "+m+"( approximate to "+Slot_SIZE+" ) slots.");
 		LogRecord.RunningInfoLogger.info("BloomFilter need "+k+"( approximate to "+validHashFunctionNum+" ) hash functions.");
@@ -111,28 +109,19 @@ public class BloomFilter {
 	 */
 	private double loadFigurePrint(){
 		double count=0;
-		String serverNodeName=Config.SYSTEMCONFIG.ServerNodeName;
-		Node n=Config.getNodeByNodeId(serverNodeName);
-		if(n==null||n instanceof DirectoryNode) {
-			LogRecord.FileHandleErrorLogger.error("["+serverNodeName+"] is not a ServerNode id");
-			return -1;
-		}
-		ServerNode node=(ServerNode)n;
-
 		FileInputStream fin = null;
 		BufferedInputStream bis =null;
 		ObjectInputStream oip=null;
-		String filePath=node.ChildNodes.get(0).StorePath;//指纹信息的保存路径
+		String filePath=Config.SYSTEMCONFIG.StorePath;//指纹信息的保存路径
 		String fileName=Common.FINGERPRINT_NAME;
 		if(!CommonUtil.validateString(filePath)){
 			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
-			return -1;
+			return count;
 		}
-		filePath+="/"+ Common.SYSTEM_FILE_FOLDER_Name;
 		File file = new File(filePath);
 		if(!file.isDirectory()||!new File(filePath+"/"+fileName).exists()){
-			LogRecord.FileHandleErrorLogger.error("Fingerprint.sys not exist. ["+filePath+"/"+fileName+"]");
-			return -1;
+			LogRecord.FileHandleErrorLogger.error(fileName+" not exist. ["+filePath+"/"+fileName+"]");
+			return count;
 		}
 		try{
 			fin = new FileInputStream(filePath+"/"+fileName);

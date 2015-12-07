@@ -3,17 +3,14 @@ package pers.sharedFileSystem.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
 import pers.sharedFileSystem.bloomFilterManager.hashFunctions.SHA1_MD5;
 import pers.sharedFileSystem.configManager.Config;
-import pers.sharedFileSystem.entity.FingerprintInfo;
+import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.entity.ServerNode;
 import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;

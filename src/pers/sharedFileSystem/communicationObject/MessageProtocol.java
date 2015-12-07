@@ -13,11 +13,11 @@ public class MessageProtocol implements Serializable {
 	 */
 	public MessageType messageType;
 	/**
+	 * 消息内容类型(状态码)
+	 */
+	public int messageCode;
+	/**
 	 * 消息内容
 	 */
-	public Hashtable<String,String>content;
-
-	public MessageProtocol(){
-		content=new Hashtable<String,String>();
-	}
+	public Object content;
 }

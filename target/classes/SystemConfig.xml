@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <SystemConfig>
-		<port>9998</port><!-- 冗余验证服务器监听端口 -->
+		<storePath>C:/Users/dell/Desktop/temp/sysInfo</storePath><!--指纹信息文件保存路径 -->
+		<port>9998</port><!-- 冗余验证服务器的监听端口 -->
 </SystemConfig>

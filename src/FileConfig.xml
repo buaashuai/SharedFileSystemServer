@@ -60,9 +60,9 @@
 		<password>0987654321</password><!-- 该服务器的登录密码 -->
 		<directoryNode id="fileStoreNode" storePath="D:/EclipseProject/deploy/webapps/OlineSacrifice/static"><!--该服务器的存储根路径 -->
 			<directoryNode id="filePath" nameType="static" name="OlineSacrificeFiles"><!--网祭平台文件根目录 -->
-				<redundancy switch="on"><!--是否进行文件删冗  on | off-->
+				<redundancy switch="off"><!--是否进行文件删冗  on | off-->
 					<maxElement>50000000</maxElement><!--最大元素数 -->
-					<falsePositiveRate>0.00001</falsePositiveRate><!--误报率 -->
+					<falsePositiveRate>0.000001</falsePositiveRate><!--误报率 -->
 					<fingerGenType type="server"><!--指纹产生方式 server | client-->
 						<property>fingerPrint</property><!--指纹映射属性名 -->
 					</fingerGenType>
