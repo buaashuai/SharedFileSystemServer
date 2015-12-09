@@ -2,4 +2,6 @@
 <SystemConfig>
 		<storePath>C:/Users/dell/Desktop/temp/sysInfo</storePath><!--指纹信息文件保存路径 -->
 		<port>9998</port><!-- 冗余验证服务器的监听端口 -->
+		<redundancyServer>storeNode</redundancyServer><!--需要发送冗余验证消息的存储服务器编号-->
+		<redundancyServer>tempNode</redundancyServer>
 </SystemConfig>

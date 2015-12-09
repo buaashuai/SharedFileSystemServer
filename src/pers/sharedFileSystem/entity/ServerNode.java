@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
- * 应用系统所对应某个的文件系统的根节点
+ * 应用系统所对应某个的存储服务器的根节点
  * 
  * @author buaashuai
  *

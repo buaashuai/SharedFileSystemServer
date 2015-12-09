@@ -3,9 +3,17 @@ package pers.sharedFileSystem.networkManager;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
 
+import pers.sharedFileSystem.communicationObject.FindRedundancyObject;
+import pers.sharedFileSystem.communicationObject.FingerprintInfo;
+import pers.sharedFileSystem.communicationObject.MessageProtocol;
 import pers.sharedFileSystem.configManager.Config;
+import pers.sharedFileSystem.convenientUtil.CommonUtil;
+import pers.sharedFileSystem.entity.ServerNode;
 import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.logManager.LogRecord;
 
@@ -23,6 +31,7 @@ public class ConnWatchDog implements Runnable {
 	 * 服务端配置文件
 	 */
 	private SystemConfig systemConfig = Config.SYSTEMCONFIG;
+
 
 	public ConnWatchDog() {
 		run=true;
@@ -56,14 +65,14 @@ public class ConnWatchDog implements Runnable {
 	public void run() {
 		serverSocket = null;
 		try {
-			serverSocket = new ServerSocket(systemConfig.Port, 5);
-			LogRecord.RunningInfoLogger.info("redundancy server started.");
+			serverSocket = new ServerSocket(systemConfig.Port, 100);
+			LogRecord.RunningInfoLogger.info("redundancy server started at port "+systemConfig.Port);
 			while(run) {
 				Socket s = serverSocket.accept();
 				LogRecord.RunningInfoLogger.info("new client connect [" + s.getInetAddress() + "]");
 				SocketAction socketAction = new SocketAction(s);
 				Thread thread = new Thread(socketAction);
-				threads.put(socketAction, thread);
+//				threads.put(socketAction, thread);
 				thread.start();
 			}
 		} catch (IOException e) {

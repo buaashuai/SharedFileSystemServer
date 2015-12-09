@@ -17,7 +17,7 @@ public class FingerprintInfo  implements Serializable {
      */
     public String NodeId;
     /**
-     * 文件绝对路径
+     * 文件相对路径
      */
     public String FilePath;
     /**

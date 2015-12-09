@@ -88,9 +88,21 @@ public class CommonUtil {
 	 * @return 是远程主机返回true，否则返回false
 	 */
 	public static  boolean isRemoteServer(String ip){
-		if(!ip.equals("127.0.0.1") && !ip.equals("localhost")){
-			return true;
-		}
-		return false;
+		return !ip.equals("127.0.0.1") && !ip.equals("localhost");
+	}
+
+	/**
+	 * FIND_REDUNDANCY命令的编号
+	 */
+	private static  double seriesId=0;
+	/**
+	 * 生成FIND_REDUNDANCY命令的编号
+	 * @return
+	 */
+	public static Double generateCheckId(){
+		seriesId++;
+		if(Double.MAX_VALUE==seriesId)
+			seriesId=1;
+		return seriesId;
 	}
 }

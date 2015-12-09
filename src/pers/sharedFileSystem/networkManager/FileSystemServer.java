@@ -3,12 +3,12 @@ package pers.sharedFileSystem.networkManager;
 import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
 
 /**
- * 文件系统服务端，运行在每个存储服务器上面
+ * 文件系统冗余验证服务端
  */
 public class FileSystemServer {
 
     /**
-     * 初始化文件系统
+     * 初始化
      */
     private void initServerSocket(){
         ConnWatchDog connWatchDog = new ConnWatchDog();

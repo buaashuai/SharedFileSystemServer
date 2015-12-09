@@ -138,10 +138,10 @@ private void deleteFileTest() throws Exception {
 	 * @throws Exception
 	 */
 	private void configTest() throws Exception {
-		Hashtable<String, ServerNode> config = Config.getConfig();
-		ServerNode serverNode = config.get("tempNode");
-		serverNode.print("");
-		System.out.println("*****************");
+//		Hashtable<String, ServerNode> config = Config.getConfig();
+//		ServerNode serverNode = config.get("tempNode");
+//		serverNode.print("");
+//		System.out.println("*****************");
 		SystemConfig systemConfig=Config.SYSTEMCONFIG;
 		systemConfig.print("");
 		System.out.println("*****************");
@@ -203,7 +203,7 @@ private void deleteFileTest() throws Exception {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Test2 test2 = new Test2();
-		test2.FingerprintAdapterTest();
+		test2.configTest();
 	}
 
 }

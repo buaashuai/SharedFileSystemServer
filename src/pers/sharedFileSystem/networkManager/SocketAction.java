@@ -5,12 +5,19 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 
 import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
+import pers.sharedFileSystem.communicationObject.FindRedundancyObject;
 import pers.sharedFileSystem.communicationObject.MessageProtocol;
 import pers.sharedFileSystem.communicationObject.MessageType;
+import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
+import pers.sharedFileSystem.entity.ServerNode;
+import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.logManager.LogRecord;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
 import pers.sharedFileSystem.systemFileManager.MessageCodeHandler;
@@ -40,7 +47,51 @@ public class SocketAction implements Runnable {
 		this.socket = s;
 		lastReceiveTime = System.currentTimeMillis();
 	}
-
+	/**
+	 * 某次查询冗余信息命令产生的线程集合
+	 */
+	private Hashtable<Double, List<FindRedundancySocketAction>> findRedundancyThreads= new Hashtable<Double,List<FindRedundancySocketAction>>();
+	/**
+	 * 资源目录树配置文件
+	 */
+	private Hashtable<String, ServerNode> fileConfig= Config.getConfig();
+	/**
+	 * 服务端配置文件
+	 */
+	private SystemConfig systemConfig = Config.SYSTEMCONFIG;
+	/**
+	 * 给需要发送冗余验证消息的存储服务器列表中的每个服务器都发送查找冗余信息文件消息命令
+	 * @param fInfo
+	 */
+	private boolean sendFindRedundancyMessageToStoreNode(FingerprintInfo fInfo,double seq){
+		FindRedundancyObject findRedundancyObject=new FindRedundancyObject();
+		findRedundancyObject.fingerprintInfo=fInfo;
+		findRedundancyObject.sequenceNum= seq;
+		List<FindRedundancySocketAction> ths=new ArrayList<FindRedundancySocketAction>();
+		MessageProtocol mes=new MessageProtocol();
+		mes.messageType=MessageType.FIND_REDUNDANCY;
+		mes.content=findRedundancyObject;
+		for(String id:systemConfig.redundancyServerIds){
+			ServerNode sn=fileConfig.get(id);
+			try {
+				Socket st=new Socket(sn.Ip, sn.Port);
+				ObjectOutputStream oos = new ObjectOutputStream(
+						st.getOutputStream());
+				oos.writeObject(mes);
+				oos.flush();
+				LogRecord.RunningInfoLogger.info("send FIND_REDUNDANCY comand to"+sn.Ip+" fingerPrint ["+fInfo.Md5+"]");
+				FindRedundancySocketAction socketAction = new FindRedundancySocketAction(st,this);
+				Thread thread = new Thread(socketAction);
+				ths.add(socketAction);
+				thread.start();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		findRedundancyThreads.put(seq,ths);
+		return true;
+	}
 	/**
 	 * 处理冗余验证消息
 	 * @param mes
@@ -53,15 +104,57 @@ public class SocketAction implements Runnable {
 		String reMes="";
 		//验证指纹
 		if(BloomFilter.getInstance().isFingerPrintExist(figurePrint.Md5)) {
+			//存储服务器返回的查找结果
+			FingerprintInfo fingerprintInfo=null;
 			//此处应该返回指纹信息对应的文件的绝对路径
+			double sequenceNum= CommonUtil.generateCheckId();
+			boolean res=sendFindRedundancyMessageToStoreNode(figurePrint,sequenceNum);
+			if(res){
+				//轮询检查冗余信息文件文件返回消息
+				List<FindRedundancySocketAction> ths=findRedundancyThreads.get(sequenceNum);
+				int num=ths.size();
+				while (true){
+					LogRecord.RunningInfoLogger.info("query if all storeNode finish FIND_REDUNDANCY.");
+					int n=0;
+					for(FindRedundancySocketAction ac:ths){
+						if(ac.isStop()){
+							n++;
+							if(ac.getFingerprintInfo()!=null){//某个存储服务器找到了该指纹信息
+								fingerprintInfo=ac.getFingerprintInfo();
+								break;
+							}
+						}
+						if(n==num){//全部查找都结束，并且都没有找到
+							break;
+						}
+					}
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+						break;
+					}
+				}
+				//找到之后通知其他正在查找的存储服务器停止查找
+				if(fingerprintInfo!=null){
+					for(FindRedundancySocketAction ac:ths){
+						if(!ac.isStop()){
+							ac.stopFindRedundancy();
+							ac.overThis();
+						}
+					}
+				}
+				//存储服务器监听线程都停止之后，移除本次产生的查找线程对象，这样这些线程对象会被垃圾回收，从而释放占用的内存
+				findRedundancyThreads.remove(sequenceNum);
+			}
 			/**************************/
-			FingerprintInfo fingerprintInfo=new FingerprintInfo();//new FingerprintAdapter().getFingerprintInfoByMD5(figurePrint);
+			//=new FingerprintInfo();//new FingerprintAdapter().getFingerprintInfoByMD5(figurePrint);
 			if(fingerprintInfo==null){
 				reMes="false";
 				reMessage.messageCode=4002;
 			}else {
 				reMessage.messageCode=4000;
-//				reMessage.content.put("filePath", fingerprintInfo.FilePath+fingerprintInfo.FileName);
+				reMessage.content=fingerprintInfo;
 				reMes = "true  , file upload rapidly.";
 			}
 		}
