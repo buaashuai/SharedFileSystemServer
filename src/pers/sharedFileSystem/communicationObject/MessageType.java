@@ -64,7 +64,18 @@ public enum MessageType implements Serializable {
     REPLY_ADD_FINGERPRINTINFO,
     /**
      * 客户端 ——> 冗余验证服务器
+     * 客户端 ——> 存储服务器
      * <p>长连接保持</p>
      */
     KEEP_ALIVE,
+    /**
+     * 客户端 ——> 存储服务器
+     * <p>获取某个目录下的冗余文件信息</p>
+     */
+    GET_REDUNDANCY_INFO,
+    /**
+     * 存储服务器 ——> 客户端
+     * <p>返回某个目录下的冗余文件信息</p>
+     */
+    REPLY_GET_REDUNDANCY_INFO,
 }

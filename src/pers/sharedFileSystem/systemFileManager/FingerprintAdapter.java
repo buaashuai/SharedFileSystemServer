@@ -20,8 +20,8 @@ public class FingerprintAdapter {
     public void saveFingerprint(FingerprintInfo fingerprintInfo){
         FileOutputStream fout=null;
         ObjectOutputStream sout =null;
-        String filePath=Config.SYSTEMCONFIG.StorePath;//指纹信息的保存路径
-        String fileName=Common.FINGERPRINT_NAME;
+        String filePath=Config.SYSTEMCONFIG.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=Config.SYSTEMCONFIG.FingerprintName;
         if(!CommonUtil.validateString(filePath)){
             LogRecord.FileHandleErrorLogger.error("save Fingerprint error, filePath is null.");
             return;
@@ -57,8 +57,8 @@ public class FingerprintAdapter {
      * @return 该指纹信息对应的文件存储信息
      */
     public FingerprintInfo getFingerprintInfoByMD5(String md5){
-        String filePath=Config.SYSTEMCONFIG.StorePath;//指纹信息的保存路径
-        String fileName=Common.FINGERPRINT_NAME;
+        String filePath=Config.SYSTEMCONFIG.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=Config.SYSTEMCONFIG.FingerprintName;
         FileInputStream fin = null;
         BufferedInputStream bis =null;
         ObjectInputStream oip=null;
@@ -118,8 +118,8 @@ public class FingerprintAdapter {
         FileInputStream fin = null;
         BufferedInputStream bis =null;
         ObjectInputStream oip=null;
-        String filePath=Config.SYSTEMCONFIG.StorePath;//指纹信息的保存路径
-        String fileName=Common.FINGERPRINT_NAME;
+        String filePath=Config.SYSTEMCONFIG.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=Config.SYSTEMCONFIG.FingerprintName;
         if(!CommonUtil.validateString(filePath)){
             LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
             return fingerprintInfos;

@@ -12,7 +12,6 @@ import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.entity.*;
 import pers.sharedFileSystem.logManager.LogRecord;
-import pers.sharedFileSystem.systemFileManager.Common;
 
 /**
  * 布隆过滤器
@@ -112,8 +111,8 @@ public class BloomFilter {
 		FileInputStream fin = null;
 		BufferedInputStream bis =null;
 		ObjectInputStream oip=null;
-		String filePath=Config.SYSTEMCONFIG.StorePath;//指纹信息的保存路径
-		String fileName=Common.FINGERPRINT_NAME;
+		String filePath=Config.SYSTEMCONFIG.FingerprintStorePath;//指纹信息的保存路径
+		String fileName=Config.SYSTEMCONFIG.FingerprintName;
 		if(!CommonUtil.validateString(filePath)){
 			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
 			return count;

@@ -308,7 +308,8 @@ public class ConfigParse {
         Element element = doc.getRootElement();
         SystemConfig systemConfig = new SystemConfig();
         systemConfig.Port = Integer.parseInt(element.getChildText("port"));
-        systemConfig.StorePath = element.getChildText("storePath");
+        systemConfig.FingerprintStorePath = element.getChildText("fingerprintStorePath");
+        systemConfig.FingerprintName = element.getChildText("fingerprintName");
         List<Element> e_serverNodes = element.getChildren("redundancyServer");
         List<String>redundancyServerIds=new ArrayList<String>();
         for (Element e : e_serverNodes) {

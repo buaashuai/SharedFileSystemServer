@@ -62,6 +62,7 @@ public class SocketAction implements Runnable {
 	/**
 	 * 给需要发送冗余验证消息的存储服务器列表中的每个服务器都发送查找冗余信息文件消息命令
 	 * @param fInfo
+	 * @param seq 冗余验证序列号
 	 */
 	private boolean sendFindRedundancyMessageToStoreNode(FingerprintInfo fInfo,double seq){
 		FindRedundancyObject findRedundancyObject=new FindRedundancyObject();
@@ -144,6 +145,17 @@ public class SocketAction implements Runnable {
 						}
 					}
 				}
+				//存储服务器监听线程都停止之后，移除本次产生的查找线程对象，这样这些线程对象会被垃圾回收，从而释放占用的内存
+				findRedundancyThreads.remove(sequenceNum);
+			}else{
+				List<FindRedundancySocketAction> ths=findRedundancyThreads.get(sequenceNum);
+				//查找失败通知其他正在查找的存储服务器停止查找
+					for(FindRedundancySocketAction ac:ths){
+						if(!ac.isStop()){
+							ac.stopFindRedundancy();
+							ac.overThis();
+						}
+					}
 				//存储服务器监听线程都停止之后，移除本次产生的查找线程对象，这样这些线程对象会被垃圾回收，从而释放占用的内存
 				findRedundancyThreads.remove(sequenceNum);
 			}

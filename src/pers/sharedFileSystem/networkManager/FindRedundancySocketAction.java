@@ -61,9 +61,12 @@ public class FindRedundancySocketAction implements Runnable {
 	 */
 	private MessageProtocol doReplyFindRedundancy(MessageProtocol mes){
 		FingerprintInfo fInfo=(FingerprintInfo)mes.content;
+		String str="";
 		if(fInfo!=null) {
-			LogRecord.RunningInfoLogger.info("receive REPLY_FIND_REDUNDANCY from "+socket.getInetAddress().toString()+" fingerPrint ["+fInfo.Md5+"] NodeId: "+fInfo.NodeId+" path: "+fInfo.FilePath+fInfo.FileName);
-		}
+			str="receive REPLY_FIND_REDUNDANCY from "+socket.getInetAddress().toString()+" fingerPrint ["+fInfo.Md5+"] NodeId: "+fInfo.NodeId+" path: "+fInfo.FilePath+fInfo.FileName;
+		}else
+			str="receive REPLY_FIND_REDUNDANCY from "+socket.getInetAddress().toString()+" fingerPrint null";
+		LogRecord.RunningInfoLogger.info(str);
 		overThis();
 		fingerprintInfo=fInfo;
 		return null;
