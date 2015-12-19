@@ -75,12 +75,12 @@ public class SocketAction implements Runnable {
 		for(String id:systemConfig.redundancyServerIds){
 			ServerNode sn=fileConfig.get(id);
 			try {
-				Socket st=new Socket(sn.Ip, sn.Port);
+				Socket st=new Socket(sn.Ip, sn.ServerPort);
 				ObjectOutputStream oos = new ObjectOutputStream(
 						st.getOutputStream());
 				oos.writeObject(mes);
 				oos.flush();
-				LogRecord.RunningInfoLogger.info("send FIND_REDUNDANCY comand to"+sn.Ip+" fingerPrint ["+fInfo.Md5+"]");
+				LogRecord.RunningInfoLogger.info("send FIND_REDUNDANCY comand to"+sn.Ip+":"+sn.ServerPort+" fingerPrint ["+fInfo.getMd5()+"]");
 				FindRedundancySocketAction socketAction = new FindRedundancySocketAction(st,this);
 				Thread thread = new Thread(socketAction);
 				ths.add(socketAction);
@@ -103,10 +103,10 @@ public class SocketAction implements Runnable {
 		MessageProtocol reMessage=new MessageProtocol();
 		//是否找到重复的文件指纹
 		String reMes="";
+		//存储服务器返回的查找结果
+		FingerprintInfo fingerprintInfo=null;
 		//验证指纹
-		if(BloomFilter.getInstance().isFingerPrintExist(figurePrint.Md5)) {
-			//存储服务器返回的查找结果
-			FingerprintInfo fingerprintInfo=null;
+		if(BloomFilter.getInstance().isFingerPrintExist(figurePrint.getMd5())) {
 			//此处应该返回指纹信息对应的文件的绝对路径
 			double sequenceNum= CommonUtil.generateCheckId();
 			boolean res=sendFindRedundancyMessageToStoreNode(figurePrint,sequenceNum);
@@ -114,7 +114,8 @@ public class SocketAction implements Runnable {
 				//轮询检查冗余信息文件文件返回消息
 				List<FindRedundancySocketAction> ths=findRedundancyThreads.get(sequenceNum);
 				int num=ths.size();
-				while (true){
+				boolean isRunning=true;//是否需要轮询
+				while (isRunning){
 					LogRecord.RunningInfoLogger.info("query if all storeNode finish FIND_REDUNDANCY.");
 					int n=0;
 					for(FindRedundancySocketAction ac:ths){
@@ -122,10 +123,12 @@ public class SocketAction implements Runnable {
 							n++;
 							if(ac.getFingerprintInfo()!=null){//某个存储服务器找到了该指纹信息
 								fingerprintInfo=ac.getFingerprintInfo();
+								isRunning=false;
 								break;
 							}
 						}
 						if(n==num){//全部查找都结束，并且都没有找到
+							isRunning=false;
 							break;
 						}
 					}
@@ -175,7 +178,7 @@ public class SocketAction implements Runnable {
 			reMessage.messageCode=4001;
 		}
 		reMessage.messageType=MessageType.REPLY_CHECK_REDUNDANCY;
-		LogRecord.FileHandleInfoLogger.info("BloomFilter check redundancy ["+figurePrint+"] "+reMes);
+		LogRecord.FileHandleInfoLogger.info("BloomFilter check redundancy ["+fingerprintInfo+"] "+reMes);
 		return reMessage;
 	}
 	/**
@@ -188,9 +191,9 @@ public class SocketAction implements Runnable {
 		MessageProtocol reMessage=new MessageProtocol();
 		if(fInfo!=null) {
 			new FingerprintAdapter().saveFingerprint(fInfo);
-			LogRecord.FileHandleInfoLogger.info("BloomFilter save a new fingerPrint to disk ["+fInfo.Md5+"]");
-			BloomFilter.getInstance().addFingerPrint(fInfo.Md5);
-			LogRecord.FileHandleInfoLogger.info("BloomFilter add a new fingerPrint ["+fInfo.Md5+"]");
+			LogRecord.FileHandleInfoLogger.info("BloomFilter save a new fingerPrint to disk ["+fInfo.getMd5()+"]");
+			BloomFilter.getInstance().addFingerPrint(fInfo.getMd5());
+			LogRecord.FileHandleInfoLogger.info("BloomFilter add a new fingerPrint ["+fInfo.getMd5()+"]");
 			reMessage.messageType=MessageType.REPLY_ADD_FINGERPRINT;
 			reMessage.messageCode=4000;
 			return reMessage;

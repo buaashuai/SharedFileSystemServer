@@ -51,7 +51,7 @@ public class BloomFilter {
 			maxElement+=serverRedundancy.MaxElementNum;
 			falsePositiveRate=Math.min(falsePositiveRate,serverRedundancy.FalsePositiveRate);
 		}
-		System.out.println("m="+maxElement+" p="+falsePositiveRate);
+//		System.out.println("m="+maxElement+" p="+falsePositiveRate);
 		double m=maxElement*(Math.log(falsePositiveRate)/Math.log(0.6185));
 		Slot_SIZE =(int)m;
 		double k=0.7*m/maxElement;
@@ -137,7 +137,7 @@ public class BloomFilter {
 				object = oip.readObject();
 				if (object instanceof FingerprintInfo) { // 判断对象类型
 					FingerprintInfo fInfo=(FingerprintInfo) object;
-					addFingerPrint(fInfo.Md5);
+					addFingerPrint(fInfo.getMd5());
 					count++;
 				}
 			}

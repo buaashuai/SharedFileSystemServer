@@ -84,7 +84,7 @@ public class FingerprintAdapter {
                 object = oip.readObject();
                 if (object instanceof FingerprintInfo) { // 判断对象类型
                     FingerprintInfo tmp=(FingerprintInfo)object;
-                    if(tmp.Md5.equals(md5))
+                    if(tmp.getMd5().equals(md5))
                         return tmp;
                 }
             }

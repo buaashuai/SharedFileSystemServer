@@ -15,11 +15,11 @@ public class ServerNode extends Node implements Serializable {
 	 */
 	public String Ip;
 	/**
-	 * 资源目录树根节点的端口号
+	 * FTP端口号
 	 */
 	public Integer Port;
 	/**
-	 * 资源目录树根节点对应的存储服务器上的文件系统服务端口
+	 * 存储服务器上的文件系统服务端口
 	 */
 	public Integer ServerPort;
 	/**

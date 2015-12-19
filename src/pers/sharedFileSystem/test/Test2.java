@@ -196,7 +196,7 @@ private void deleteFileTest() throws Exception {
 //			fingerprintAdapter.saveFingerprint("tempStoreNode",fingerprintInfo);
 			List<FingerprintInfo>fingerprintInfos=fingerprintAdapter.getAllFingerprintInfo("tempStoreNode");
 			for(FingerprintInfo info:fingerprintInfos){
-				System.out.println(info.Md5+" "+info.FilePath+" "+info.FileName);
+				System.out.println(info);
 			}
 	}
 

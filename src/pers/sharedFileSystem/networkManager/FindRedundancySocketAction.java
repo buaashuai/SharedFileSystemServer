@@ -28,7 +28,7 @@ public class FindRedundancySocketAction implements Runnable {
 	/**
 	 * 存储服务器返回的查找结果
 	 */
-	public FingerprintInfo fingerprintInfo;
+	public volatile FingerprintInfo fingerprintInfo;
 	/**
 	 * 父线程
 	 */
@@ -47,11 +47,25 @@ public class FindRedundancySocketAction implements Runnable {
 		return  fingerprintInfo;
 	}
 	/**
-	 * 判断线程是否停止
+	 * 判断线程是否停止和存储端是否已断开连接
 	 * @return
 	 */
 	public boolean isStop(){
-		return !run;
+		boolean isShutdown=false;
+		ObjectOutputStream oos = null;
+		try {
+			if(run) {
+				MessageProtocol reMessage = new MessageProtocol();
+				reMessage.messageType = MessageType.SOCKET_MONITOR;
+				oos = new ObjectOutputStream(
+						socket.getOutputStream());
+				oos.writeObject(reMessage);
+				oos.flush();
+			}
+		} catch (Exception e) {
+			isShutdown=true;
+		}
+		return run==false||isShutdown;
 	}
 
 	/**
@@ -63,7 +77,7 @@ public class FindRedundancySocketAction implements Runnable {
 		FingerprintInfo fInfo=(FingerprintInfo)mes.content;
 		String str="";
 		if(fInfo!=null) {
-			str="receive REPLY_FIND_REDUNDANCY from "+socket.getInetAddress().toString()+" fingerPrint ["+fInfo.Md5+"] NodeId: "+fInfo.NodeId+" path: "+fInfo.FilePath+fInfo.FileName;
+			str="receive REPLY_FIND_REDUNDANCY from "+socket.getInetAddress().toString()+" fingerPrint ["+fInfo.getMd5()+"] NodeId: "+fInfo.getNodeId()+" path: "+fInfo.getFilePath()+fInfo.getFileName();
 		}else
 			str="receive REPLY_FIND_REDUNDANCY from "+socket.getInetAddress().toString()+" fingerPrint null";
 		LogRecord.RunningInfoLogger.info(str);
