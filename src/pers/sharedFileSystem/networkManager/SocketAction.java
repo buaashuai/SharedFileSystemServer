@@ -19,8 +19,6 @@ import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.entity.ServerNode;
 import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.logManager.LogRecord;
-import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
-import pers.sharedFileSystem.systemFileManager.MessageCodeHandler;
 
 /**
  * 监控某个连接（客户端）发来的消息
@@ -50,7 +48,8 @@ public class SocketAction implements Runnable {
 	/**
 	 * 某次查询冗余信息命令产生的线程集合
 	 */
-	private Hashtable<Double, List<FindRedundancySocketAction>> findRedundancyThreads= new Hashtable<Double,List<FindRedundancySocketAction>>();
+	private Hashtable<Double, List<ConnStoreServerSocketAction>> findRedundancyThreads= new Hashtable<Double,List<ConnStoreServerSocketAction>>();
+
 	/**
 	 * 资源目录树配置文件
 	 */
@@ -68,7 +67,7 @@ public class SocketAction implements Runnable {
 		FindRedundancyObject findRedundancyObject=new FindRedundancyObject();
 		findRedundancyObject.fingerprintInfo=fInfo;
 		findRedundancyObject.sequenceNum= seq;
-		List<FindRedundancySocketAction> ths=new ArrayList<FindRedundancySocketAction>();
+		List<ConnStoreServerSocketAction> ths=new ArrayList<ConnStoreServerSocketAction>();
 		MessageProtocol mes=new MessageProtocol();
 		mes.messageType=MessageType.FIND_REDUNDANCY;
 		mes.content=findRedundancyObject;
@@ -81,7 +80,7 @@ public class SocketAction implements Runnable {
 				oos.writeObject(mes);
 				oos.flush();
 				LogRecord.RunningInfoLogger.info("send FIND_REDUNDANCY comand to"+sn.Ip+":"+sn.ServerPort+" fingerPrint ["+fInfo.getMd5()+"]");
-				FindRedundancySocketAction socketAction = new FindRedundancySocketAction(st,this);
+				ConnStoreServerSocketAction socketAction = new ConnStoreServerSocketAction(st);
 				Thread thread = new Thread(socketAction);
 				ths.add(socketAction);
 				thread.start();
@@ -93,6 +92,7 @@ public class SocketAction implements Runnable {
 		findRedundancyThreads.put(seq,ths);
 		return true;
 	}
+
 	/**
 	 * 处理冗余验证消息
 	 * @param mes
@@ -112,13 +112,13 @@ public class SocketAction implements Runnable {
 			boolean res=sendFindRedundancyMessageToStoreNode(figurePrint,sequenceNum);
 			if(res){
 				//轮询检查冗余信息文件文件返回消息
-				List<FindRedundancySocketAction> ths=findRedundancyThreads.get(sequenceNum);
+				List<ConnStoreServerSocketAction> ths=findRedundancyThreads.get(sequenceNum);
 				int num=ths.size();
 				boolean isRunning=true;//是否需要轮询
 				while (isRunning){
 					LogRecord.RunningInfoLogger.info("query if all storeNode finish FIND_REDUNDANCY.");
 					int n=0;
-					for(FindRedundancySocketAction ac:ths){
+					for(ConnStoreServerSocketAction ac:ths){
 						if(ac.isStop()){
 							n++;
 							if(ac.getFingerprintInfo()!=null){//某个存储服务器找到了该指纹信息
@@ -141,7 +141,7 @@ public class SocketAction implements Runnable {
 				}
 				//找到之后通知其他正在查找的存储服务器停止查找
 				if(fingerprintInfo!=null){
-					for(FindRedundancySocketAction ac:ths){
+					for(ConnStoreServerSocketAction ac:ths){
 						if(!ac.isStop()){
 							ac.stopFindRedundancy();
 							ac.overThis();
@@ -151,9 +151,9 @@ public class SocketAction implements Runnable {
 				//存储服务器监听线程都停止之后，移除本次产生的查找线程对象，这样这些线程对象会被垃圾回收，从而释放占用的内存
 				findRedundancyThreads.remove(sequenceNum);
 			}else{
-				List<FindRedundancySocketAction> ths=findRedundancyThreads.get(sequenceNum);
+				List<ConnStoreServerSocketAction> ths=findRedundancyThreads.get(sequenceNum);
 				//查找失败通知其他正在查找的存储服务器停止查找
-					for(FindRedundancySocketAction ac:ths){
+					for(ConnStoreServerSocketAction ac:ths){
 						if(!ac.isStop()){
 							ac.stopFindRedundancy();
 							ac.overThis();
@@ -182,7 +182,7 @@ public class SocketAction implements Runnable {
 		return reMessage;
 	}
 	/**
-	 * 处理添加指纹信息消息
+	 * 处理添加指纹信息消息（布隆过滤器置位）
 	 * @param mes
 	 * @return
 	 */
@@ -190,8 +190,8 @@ public class SocketAction implements Runnable {
 		FingerprintInfo fInfo=(FingerprintInfo)mes.content;//new FingerprintInfo(figurePrint,filePath,fileName);
 		MessageProtocol reMessage=new MessageProtocol();
 		if(fInfo!=null) {
-			new FingerprintAdapter().saveFingerprint(fInfo);
-			LogRecord.FileHandleInfoLogger.info("BloomFilter save a new fingerPrint to disk ["+fInfo.getMd5()+"]");
+//			new FingerprintAdapter().saveFingerprint(fInfo);
+//			LogRecord.FileHandleInfoLogger.info("BloomFilter save a new fingerPrint to disk ["+fInfo.getMd5()+"]");
 			BloomFilter.getInstance().addFingerPrint(fInfo.getMd5());
 			LogRecord.FileHandleInfoLogger.info("BloomFilter add a new fingerPrint ["+fInfo.getMd5()+"]");
 			reMessage.messageType=MessageType.REPLY_ADD_FINGERPRINT;

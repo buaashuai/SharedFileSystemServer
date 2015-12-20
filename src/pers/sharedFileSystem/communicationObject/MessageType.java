@@ -93,4 +93,14 @@ public enum MessageType implements Serializable {
      * <p>返回添加文件引用</p>
      */
     REPLY_ADD_FREQUENCY,
+    /**
+     * 冗余验证服务器 ——> 存储服务器
+     * <p>获取指纹信息列表</p>
+     */
+    GET_FINGERPRINT_LIST,
+    /**
+     * 存储服务器 ——> 冗余验证服务器
+     * <p>返回指纹信息列表</p>
+     */
+    REPLY_GET_FINGERPRINT_LIST,
 }

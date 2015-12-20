@@ -17,7 +17,8 @@ public class FileSystemServer {
     }
 
     public FileSystemServer() {
-        BloomFilter.getInstance();
+        BloomFilter b=BloomFilter.getInstance();
+        b.initBloomFilter();
         initServerSocket();
     }
 

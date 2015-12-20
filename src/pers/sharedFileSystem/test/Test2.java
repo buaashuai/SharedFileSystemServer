@@ -13,7 +13,6 @@ import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.entity.ServerNode;
 import pers.sharedFileSystem.entity.SystemConfig;
-import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
 
 public class Test2 {
 
@@ -187,18 +186,7 @@ private void deleteFileTest() throws Exception {
 		}
 	}
 
-	/**
-	 * 指纹信息管理类测试
-	 */
-	private void FingerprintAdapterTest(){
-			FingerprintAdapter fingerprintAdapter=new FingerprintAdapter();
-//			FingerprintInfo fingerprintInfo=new FingerprintInfo("213","e:/df","a.txt");
-//			fingerprintAdapter.saveFingerprint("tempStoreNode",fingerprintInfo);
-			List<FingerprintInfo>fingerprintInfos=fingerprintAdapter.getAllFingerprintInfo("tempStoreNode");
-			for(FingerprintInfo info:fingerprintInfos){
-				System.out.println(info);
-			}
-	}
+
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub

@@ -5,18 +5,19 @@ import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.communicationObject.MessageProtocol;
 import pers.sharedFileSystem.communicationObject.MessageType;
 import pers.sharedFileSystem.logManager.LogRecord;
-import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 监控存储服务器发来的消息线程
  */
-public class FindRedundancySocketAction implements Runnable {
+public class ConnStoreServerSocketAction implements Runnable {
 	/**
 	 * 监听的连接
 	 */
@@ -28,15 +29,16 @@ public class FindRedundancySocketAction implements Runnable {
 	/**
 	 * 存储服务器返回的查找结果
 	 */
-	public volatile FingerprintInfo fingerprintInfo;
+	private volatile FingerprintInfo fingerprintInfo;
 	/**
-	 * 父线程
+	 * 存储服务器返回的指纹信息个数查找结果
 	 */
-	private SocketAction socketAction;
+	private volatile double fingerprintNum;
 
-	public FindRedundancySocketAction(Socket s, SocketAction c) {
+	public ConnStoreServerSocketAction(Socket s) {
 		this.socket = s;
-		this.socketAction=c;
+		fingerprintNum=0;
+		fingerprintInfo=null;
 	}
 
 	/**
@@ -45,6 +47,13 @@ public class FindRedundancySocketAction implements Runnable {
 	 */
 	public FingerprintInfo getFingerprintInfo(){
 		return  fingerprintInfo;
+	}
+	/**
+	 * 获取返回结果
+	 * @return
+	 */
+	public double getFingerprintNum(){
+		return  fingerprintNum;
 	}
 	/**
 	 * 判断线程是否停止和存储端是否已断开连接
@@ -85,7 +94,27 @@ public class FindRedundancySocketAction implements Runnable {
 		fingerprintInfo=fInfo;
 		return null;
 	}
-
+	/**
+	 * 处理返回指纹信息列表消息
+	 * @param mes
+	 * @return
+	 */
+	private MessageProtocol doReplyGetFingerprintList(MessageProtocol mes){
+		ArrayList<String> fingers=(ArrayList<String>)mes.content;
+		String str="";
+		if(fingers.size()>0) {
+			str="receive REPLY_GET_FINGERPRINT_LIST from "+socket.getInetAddress().toString()+" num= "+fingers.size();
+			for(String s:fingers){
+				BloomFilter.getInstance().addFingerPrint(s);
+			}
+			fingerprintNum+=fingers.size();
+		}else {
+			str = "REPLY_GET_FINGERPRINT_LIST from " + socket.getInetAddress().toString() + " is ended";
+			overThis();
+		}
+		LogRecord.RunningInfoLogger.info(str);
+		return null;
+	}
 	/**
 	 * 收到消息之后进行分类处理
 	 * @param mes
@@ -96,11 +125,13 @@ public class FindRedundancySocketAction implements Runnable {
 			case REPLY_FIND_REDUNDANCY:{
 				return doReplyFindRedundancy(mes);
 			}
+			case REPLY_GET_FINGERPRINT_LIST:{
+				return doReplyGetFingerprintList(mes);
+			}
 			default:{
 				return null;
 			}
 		}
-
 	}
 
 	/**

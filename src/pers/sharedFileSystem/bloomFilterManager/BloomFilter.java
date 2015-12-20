@@ -2,16 +2,18 @@ package pers.sharedFileSystem.bloomFilterManager;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.BitSet;
-import java.util.LinkedHashMap;
-import java.util.Set;
+import java.net.Socket;
+import java.util.*;
 
 import pers.sharedFileSystem.bloomFilterManager.hashFunctions.*;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
+import pers.sharedFileSystem.communicationObject.MessageProtocol;
+import pers.sharedFileSystem.communicationObject.MessageType;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.entity.*;
 import pers.sharedFileSystem.logManager.LogRecord;
+import pers.sharedFileSystem.networkManager.ConnStoreServerSocketAction;
 
 /**
  * 布隆过滤器
@@ -40,6 +42,18 @@ public class BloomFilter {
 	 * 布隆过滤器实例
 	 */
 	private static final BloomFilter bloomFilter = new BloomFilter();// ”饿汉式“单例模式可以保证线程安全
+	/**
+	 * 资源目录树配置文件
+	 */
+	private Hashtable<String, ServerNode> fileConfig= Config.getConfig();
+	/**
+	 * 服务端配置文件
+	 */
+	private SystemConfig systemConfig = Config.SYSTEMCONFIG;
+	/**
+	 * 初始化指纹信息产生的线程集合（必须使用线程安全的集合，否则不能得到每个线程的状态）
+	 */
+	private Hashtable<String,ConnStoreServerSocketAction> initFingerprintThreads=new Hashtable<String,ConnStoreServerSocketAction>();
 
 	/**
 	 * 根据配置文件计算系统需要的hash函数个数（validHashFunctionNum），和布隆过滤器需要的槽数（Slot_SIZE）
@@ -104,67 +118,88 @@ public class BloomFilter {
 	}
 
 	/**
+	 * 给需要发送冗余验证消息的存储服务器列表中的每个服务器都发送“获取指纹信息列表”命令
+	 */
+	private boolean sendGetFingerprintListMessageToStoreNode(){
+
+		MessageProtocol mes=new MessageProtocol();
+		mes.messageType= MessageType.GET_FINGERPRINT_LIST;
+		for(String id:systemConfig.redundancyServerIds){
+			ServerNode sn=fileConfig.get(id);
+			try {
+				Socket st=new Socket(sn.Ip, sn.ServerPort);
+				ObjectOutputStream oos = new ObjectOutputStream(
+						st.getOutputStream());
+				oos.writeObject(mes);
+				oos.flush();
+				LogRecord.RunningInfoLogger.info("send GET_FINGERPRINT_LIST comand to"+sn.Ip+":"+sn.ServerPort);
+				ConnStoreServerSocketAction socketAction = new ConnStoreServerSocketAction(st);
+				Thread thread = new Thread(socketAction);
+				initFingerprintThreads.put(sn.Ip,socketAction);
+				thread.start();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return true;
+	}
+	/**
 	 * 把指纹信息加载到内存
 	 */
 	private double loadFigurePrint(){
-		double count=0;
-		FileInputStream fin = null;
-		BufferedInputStream bis =null;
-		ObjectInputStream oip=null;
-		String filePath=Config.SYSTEMCONFIG.FingerprintStorePath;//指纹信息的保存路径
-		String fileName=Config.SYSTEMCONFIG.FingerprintName;
-		if(!CommonUtil.validateString(filePath)){
-			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
-			return count;
-		}
-		File file = new File(filePath);
-		if(!file.isDirectory()||!new File(filePath+"/"+fileName).exists()){
-			LogRecord.FileHandleErrorLogger.error(fileName+" not exist. ["+filePath+"/"+fileName+"]");
-			return count;
-		}
-		try{
-			fin = new FileInputStream(filePath+"/"+fileName);
-			bis = new BufferedInputStream(fin);
-			while (true) {
+		int count=0;
+		boolean res=sendGetFingerprintListMessageToStoreNode();
+		if(res){
+			int num=initFingerprintThreads.size();
+			//轮询检查是否指纹信息是否已经加载完毕
+			boolean isRunning=true;//是否需要轮询
+			while (isRunning){
+				LogRecord.RunningInfoLogger.info("query if all storeNode finish GET_FINGERPRINT_LIST.");
+				int n=0;
+				for(ConnStoreServerSocketAction ac:initFingerprintThreads.values()){
+					if(ac.isStop()){
+						n++;
+					}
+					if(n==num){//全部查找都结束，并且都没有找到
+						isRunning=false;
+						break;
+					}
+				}
 				try {
-					oip = new ObjectInputStream(bis); // 每次重新构造对象输入流
-				}catch (EOFException e) {
-					// e.printStackTrace();
-//                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
-					return count;
-				}
-				Object object = new Object();
-				object = oip.readObject();
-				if (object instanceof FingerprintInfo) { // 判断对象类型
-					FingerprintInfo fInfo=(FingerprintInfo) object;
-					addFingerPrint(fInfo.getMd5());
-					count++;
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					break;
 				}
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}finally {
-			try {
-				if(oip!=null)
-					oip.close();
-				if(bis!=null)
-					bis.close();
-				if(fin!=null)
-					fin.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			//找到之后统计总数
+			for(ConnStoreServerSocketAction ac:initFingerprintThreads.values()){
+				count+=ac.getFingerprintNum();
+			}
+		}else{
+			//发送失败通知其他获取指纹信息的线程停止继续获取
+			for(ConnStoreServerSocketAction ac:initFingerprintThreads.values()){
+				if(!ac.isStop()){
+					ac.overThis();
+				}
 			}
 		}
+		//移除本次产生的所有线程对象，这样这些线程对象会被垃圾回收，从而释放占用的内存
+		initFingerprintThreads.clear();
 		return count;
 	}
 	/**
 	 *  私有的默认构造函数
 	 */
 	private BloomFilter() {
+
+	}
+
+	/**
+	 * 初始化布隆过滤器，（必须在外部进行初始化（不能将初始化放在BloomFilter()里面）否则查加载指纹信息里面的轮询函数永远停不下来）
+	 */
+	public void initBloomFilter(){
 		LogRecord.RunningInfoLogger.info("start calculate hashFunction num.");
 		calculateHashFunctionNum();
 		LogRecord.RunningInfoLogger.info("calculate hashFunction num successful.");
@@ -174,7 +209,7 @@ public class BloomFilter {
 		bitset= new BitSet(Slot_SIZE);
 		LogRecord.RunningInfoLogger.info("start load figurePrint.");
 		double num=loadFigurePrint();
-		LogRecord.RunningInfoLogger.info("load figurePrint successful.  total count: "+num);
+		LogRecord.RunningInfoLogger.info("load figurePrint successful.  total count: " + num);
 	}
 
 	/**
