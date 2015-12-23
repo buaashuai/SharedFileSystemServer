@@ -8,7 +8,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import pers.sharedFileSystem.communicationObject.FindRedundancyObject;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.communicationObject.MessageProtocol;
 import pers.sharedFileSystem.configManager.Config;

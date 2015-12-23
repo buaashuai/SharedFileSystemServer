@@ -7,23 +7,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8d1ec864-595e-4917-8830-2934796e495f" name="Default" comment="扩展了通信消息类型；修改了配置文件；增加：查找冗余文件信息失败也通知其他正在查找的存储服务器停止查找；">
-      <change type="DELETED" beforePath="D:\GitProject\SharedFileSystemServer\src\pers\sharedFileSystem\systemFileManager\FingerprintAdapter.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/configManager/ConfigParse.class" afterPath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/configManager/ConfigParse.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/SystemConfig.class" afterPath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/SystemConfig.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/test/Test2.class" afterPath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/test/Test2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pers/sharedFileSystem/bloomFilterManager/BloomFilter.java" afterPath="$PROJECT_DIR$/src/pers/sharedFileSystem/bloomFilterManager/BloomFilter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pers/sharedFileSystem/configManager/ConfigParse.java" afterPath="$PROJECT_DIR$/src/pers/sharedFileSystem/configManager/ConfigParse.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/networkManager/FileSystemServer.class" afterPath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/networkManager/FileSystemServer.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnWatchDog.java" afterPath="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnWatchDog.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/FileConfig.xml" afterPath="$PROJECT_DIR$/src/FileConfig.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/FileConfig.xml" afterPath="$PROJECT_DIR$/target/classes/FileConfig.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/FileSystemServer.java" afterPath="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/FileSystemServer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/MessageType.java" afterPath="$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/MessageType.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java" afterPath="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pers/sharedFileSystem/entity/SystemConfig.java" afterPath="$PROJECT_DIR$/src/pers/sharedFileSystem/entity/SystemConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SystemConfig.xml" afterPath="$PROJECT_DIR$/src/SystemConfig.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/SystemConfig.xml" afterPath="$PROJECT_DIR$/target/classes/SystemConfig.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pers/sharedFileSystem/test/Test2.java" afterPath="$PROJECT_DIR$/src/pers/sharedFileSystem/test/Test2.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="D:\GitProject\SharedFileSystemServer\src\pers\sharedFileSystem\networkManager\FindRedundancySocketAction.java" afterPath="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnStoreServerSocketAction.java" />
     </list>
     <list id="a6197c55-aa1d-4d9e-b874-ac79bc068b4d" name="Failed commit: Default" comment="test" />
     <ignored path="SharedFileSystem.iws" />
@@ -62,11 +52,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MessageType.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MessageType.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/MessageType.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="105" column="1" selection-start-line="105" selection-start-column="1" selection-end-line="105" selection-end-column="1" />
+            <state vertical-scroll-proportion="0.8064516">
+              <caret line="116" column="24" selection-start-line="116" selection-start-column="24" selection-end-line="116" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -78,7 +68,10 @@
             <state vertical-scroll-proportion="0.0">
               <caret line="59" column="35" selection-start-line="59" selection-start-column="35" selection-end-line="59" selection-end-column="35" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#1760#1776#0" expanded="false" />
+                <element signature="e#2526#2542#0" expanded="false" />
+                <element signature="e#3413#3429#0" expanded="false" />
+                <element signature="e#3892#3908#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -87,25 +80,11 @@
       <file leaf-file-name="ConnStoreServerSocketAction.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnStoreServerSocketAction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.9666667">
-              <caret line="117" column="7" selection-start-line="117" selection-start-column="7" selection-end-line="117" selection-end-column="7" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="97" column="19" selection-start-line="97" selection-start-column="19" selection-end-line="97" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1095#1096#0" expanded="true" />
-                <element signature="e#1125#1126#0" expanded="true" />
-                <element signature="e#1194#1195#0" expanded="true" />
-                <element signature="e#1223#1224#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ConnWatchDog.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnWatchDog.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="23" column="19" selection-start-line="23" selection-start-column="19" selection-end-line="23" selection-end-column="19" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -120,29 +99,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BloomFilter.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/bloomFilterManager/BloomFilter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5863747">
-              <caret line="213" column="4" selection-start-line="213" selection-start-column="4" selection-end-line="213" selection-end-column="4" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1479#1515#0" expanded="true" />
-                <element signature="e#6972#6973#0" expanded="true" />
-                <element signature="e#6997#6998#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="SocketAction.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.3">
-              <caret line="194" column="69" selection-start-line="194" selection-start-column="69" selection-end-line="194" selection-end-column="69" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="81" column="72" selection-start-line="81" selection-start-column="72" selection-end-line="81" selection-end-column="72" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1391#1433#0" expanded="true" />
+                <element signature="e#1945#1974#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -209,7 +173,6 @@
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/systemFileManager/messageCode.properties" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/entity/FileType.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/convenientUtil/CommonUtil.java" />
-        <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnWatchDog.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/FindRedundancyObject.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/entity/ServerNode.java" />
         <option value="$PROJECT_DIR$/src/FileConfig.xml" />
@@ -219,13 +182,14 @@
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/systemFileManager/FingerprintAdapter.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/test/Test2.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/configManager/ConfigParse.java" />
-        <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/MessageType.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/FindRedundancySocketAction.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/GetFingerprintListSocketAction.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/FileSystemServer.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnStoreServerSocketAction.java" />
-        <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/bloomFilterManager/BloomFilter.java" />
+        <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnWatchDog.java" />
+        <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java" />
+        <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/MessageType.java" />
       </list>
     </option>
   </component>
@@ -413,9 +377,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches">
-        <subPane />
-      </pane>
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -429,6 +390,9 @@
             </PATH_ELEMENT>
           </PATH>
         </subPane>
+      </pane>
+      <pane id="Scratches">
+        <subPane />
       </pane>
       <pane id="ProjectPane">
         <subPane>
@@ -1139,7 +1103,8 @@
       <workItem from="1450317556345" duration="17120000" />
       <workItem from="1450404764331" duration="7295000" />
       <workItem from="1450494133647" duration="6231000" />
-      <workItem from="1450614299819" duration="12373000" />
+      <workItem from="1450614299819" duration="12688000" />
+      <workItem from="1450884973591" duration="1069000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <created>1442129376567</created>
@@ -1393,11 +1358,17 @@
       <option name="project" value="LOCAL" />
       <updated>1450520996732</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="扩展了通信消息类型，实现了GET_FINGERPRINT_LIST、REPLY_GET_FINGERPRINT_LIST；布隆过滤器在初始化的时候从指定的存储服务器多线程加载指纹信息，每个存储服务器每次给冗余验证服务器发送100条指纹，发送0条为发送结束的标识；布隆过滤器在外部进行初始化（不能将初始化放在BloomFilter()里面）否则查加载指纹信息里面的轮询函数永远停不下来；删除了配置文件中的fingerprintStorePath和fingerprintName；FileSystemServer重写了启动函数；删除了FingerprintAdapter；doAddFingerprintAction方法里面不需要将指纹保存在本地了；FindRedundancySocketAction重命名为ConnStoreServerSocketAction；">
+      <created>1450630550504</created>
+      <option name="number" value="00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1450630550504</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="395105000" />
+    <option name="totallyTimeSpent" value="396489000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -1417,25 +1388,25 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32689834" sideWeight="0.49732262" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3534932" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3534932" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24961948" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32952815" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5943691" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3214671" sideWeight="0.48322147" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1687898" sideWeight="0.5032051" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18561001" sideWeight="0.5167785" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39103234" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29092804" sideWeight="0.5167785" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32686085" sideWeight="0.49732262" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10648918" sideWeight="0.4920635" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33409438" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13643926" sideWeight="0.49679488" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.50782067" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" x="163" y="129" width="1434" height="866" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15838926" sideWeight="0.50793654" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6809176" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24949427" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5943691" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39103234" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -1453,7 +1424,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
-    <MESSAGE value="把日志拆分成系统运行日志和文件系统操作日志，每种日志都包括：info/error" />
     <MESSAGE value="定义了户端和服务端的通讯协议，更新了部分布隆过滤器代码。" />
     <MESSAGE value="ServerNode添加serverRedundancy，表示该服务器的文件删冗信息。同时添加对ServerNode中serverRedundancy的解析。" />
     <MESSAGE value="修改部分文件的编码格式为UTF-8，实现计算布隆过滤器的: m和k&#10;m为布隆过滤器的槽数 m bits&#10;k为哈希函数个数&#10;，验证得出系统支持的极限为：&#10;十万分之一误差，5000万个文件，内存占用：142.82699178532886 MB&#10;需要的hash函数个数：16.77367504268881 ≅ 17 个&#10;&#10;增加了一些hash函数" />
@@ -1476,9 +1446,10 @@
     <MESSAGE value="删除了服务端没有用到的类，增加了线程可以监听多个客户端的连接，并可以接收和处理多个客户端发来的消息。还有bug未修复。" />
     <MESSAGE value="日志记录精确到毫秒；修改了布隆过滤器中计算hash函数个数的方法；文件类型类中新增了‘不确定’文件类型；指纹信息类中增加了“文件类型”、“文件存储节点编号”；重构通信协议，增加消息内容类型(状态码)；配置文件增加了“指纹信息文件保存路径”；" />
     <MESSAGE value="扩展了通信消息类型；配置文件增加了“需要发送冗余验证消息的存储服务器编号”；基本完成了“处理冗余验证消息”，新增和多个存储服务器之间的短连接，当冗余文件查找结束之后就释放连接；" />
-    <MESSAGE value="扩展了通信消息类型；修改了配置文件；增加：查找冗余文件信息失败也通知其他正在查找的存储服务器停止查找；" />
     <MESSAGE value="查找冗余信息文件通信对象实现了序列化接口；FindRedundancySocketAction通过发送SOCKET_MONITOR判断线程是否停止和存储端是否已断开连接；FingerprintInfo增加get和set方法，目的是为了将该类转换成json对象；增加消息类型ADD_FREQUENCY、SOCKET_MONITOR、REPLY_ADD_FREQUENCY；修复了处理冗余验证消息方法中的Bug；" />
-    <option name="LAST_COMMIT_MESSAGE" value="查找冗余信息文件通信对象实现了序列化接口；FindRedundancySocketAction通过发送SOCKET_MONITOR判断线程是否停止和存储端是否已断开连接；FingerprintInfo增加get和set方法，目的是为了将该类转换成json对象；增加消息类型ADD_FREQUENCY、SOCKET_MONITOR、REPLY_ADD_FREQUENCY；修复了处理冗余验证消息方法中的Bug；" />
+    <MESSAGE value="扩展了通信消息类型；修改了配置文件；增加：查找冗余文件信息失败也通知其他正在查找的存储服务器停止查找；" />
+    <MESSAGE value="扩展了通信消息类型，实现了GET_FINGERPRINT_LIST、REPLY_GET_FINGERPRINT_LIST；布隆过滤器在初始化的时候从指定的存储服务器多线程加载指纹信息，每个存储服务器每次给冗余验证服务器发送100条指纹，发送0条为发送结束的标识；布隆过滤器在外部进行初始化（不能将初始化放在BloomFilter()里面）否则查加载指纹信息里面的轮询函数永远停不下来；删除了配置文件中的fingerprintStorePath和fingerprintName；FileSystemServer重写了启动函数；删除了FingerprintAdapter；doAddFingerprintAction方法里面不需要将指纹保存在本地了；FindRedundancySocketAction重命名为ConnStoreServerSocketAction；" />
+    <option name="LAST_COMMIT_MESSAGE" value="扩展了通信消息类型，实现了GET_FINGERPRINT_LIST、REPLY_GET_FINGERPRINT_LIST；布隆过滤器在初始化的时候从指定的存储服务器多线程加载指纹信息，每个存储服务器每次给冗余验证服务器发送100条指纹，发送0条为发送结束的标识；布隆过滤器在外部进行初始化（不能将初始化放在BloomFilter()里面）否则查加载指纹信息里面的轮询函数永远停不下来；删除了配置文件中的fingerprintStorePath和fingerprintName；FileSystemServer重写了启动函数；删除了FingerprintAdapter；doAddFingerprintAction方法里面不需要将指纹保存在本地了；FindRedundancySocketAction重命名为ConnStoreServerSocketAction；" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1495,6 +1466,17 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="194" column="69" selection-start-line="194" selection-start-column="69" selection-end-line="194" selection-end-column="69" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1945#1974#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/MessageType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1788,18 +1770,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/FindRedundancyObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5520581">
-          <caret line="12" column="7" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/systemFileManager/MessageCodeHandler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="24" column="57" selection-start-line="24" selection-start-column="57" selection-end-line="24" selection-end-column="57" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1807,7 +1781,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1822,15 +1795,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="309" column="75" selection-start-line="309" selection-start-column="75" selection-end-line="309" selection-end-column="75" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/MessageType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="105" column="1" selection-start-line="105" selection-start-column="1" selection-end-line="105" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1858,24 +1822,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnWatchDog.java">
+    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/test/Test2.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="19" selection-start-line="23" selection-start-column="19" selection-end-line="23" selection-end-column="19" />
+          <caret line="59" column="35" selection-start-line="59" selection-start-column="35" selection-end-line="59" selection-end-column="35" />
+          <folding>
+            <element signature="e#1760#1776#0" expanded="false" />
+            <element signature="e#2526#2542#0" expanded="false" />
+            <element signature="e#3413#3429#0" expanded="false" />
+            <element signature="e#3892#3908#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnWatchDog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.32258064">
+          <caret line="10" column="59" selection-start-line="10" selection-start-column="59" selection-end-line="10" selection-end-column="59" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnStoreServerSocketAction.java">
+    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/FindRedundancyObject.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.9666667">
-          <caret line="117" column="7" selection-start-line="117" selection-start-column="7" selection-end-line="117" selection-end-column="7" />
+        <state vertical-scroll-proportion="0.516129">
+          <caret line="16" column="1" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/bloomFilterManager/BloomFilter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.47028863">
+          <caret line="233" column="5" selection-start-line="233" selection-start-column="5" selection-end-line="233" selection-end-column="5" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1095#1096#0" expanded="true" />
-            <element signature="e#1125#1126#0" expanded="true" />
-            <element signature="e#1194#1195#0" expanded="true" />
-            <element signature="e#1223#1224#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1479#1515#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1888,37 +1870,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/test/Test2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="59" column="35" selection-start-line="59" selection-start-column="35" selection-end-line="59" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.3">
-          <caret line="194" column="69" selection-start-line="194" selection-start-column="69" selection-end-line="194" selection-end-column="69" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="81" column="72" selection-start-line="81" selection-start-column="72" selection-end-line="81" selection-end-column="72" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1391#1433#0" expanded="true" />
+            <element signature="e#1945#1974#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/bloomFilterManager/BloomFilter.java">
+    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnStoreServerSocketAction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5863747">
-          <caret line="213" column="4" selection-start-line="213" selection-start-column="4" selection-end-line="213" selection-end-column="4" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="97" column="19" selection-start-line="97" selection-start-column="19" selection-end-line="97" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1479#1515#0" expanded="true" />
-            <element signature="e#6972#6973#0" expanded="true" />
-            <element signature="e#6997#6998#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/MessageType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8064516">
+          <caret line="116" column="24" selection-start-line="116" selection-start-column="24" selection-end-line="116" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>

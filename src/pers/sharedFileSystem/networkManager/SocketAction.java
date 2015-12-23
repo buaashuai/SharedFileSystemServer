@@ -10,7 +10,6 @@ import java.util.Hashtable;
 import java.util.List;
 
 import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
-import pers.sharedFileSystem.communicationObject.FindRedundancyObject;
 import pers.sharedFileSystem.communicationObject.MessageProtocol;
 import pers.sharedFileSystem.communicationObject.MessageType;
 import pers.sharedFileSystem.configManager.Config;
@@ -64,13 +63,13 @@ public class SocketAction implements Runnable {
 	 * @param seq 冗余验证序列号
 	 */
 	private boolean sendFindRedundancyMessageToStoreNode(FingerprintInfo fInfo,double seq){
-		FindRedundancyObject findRedundancyObject=new FindRedundancyObject();
-		findRedundancyObject.fingerprintInfo=fInfo;
-		findRedundancyObject.sequenceNum= seq;
+//		FindRedundancyObject findRedundancyObject=new FindRedundancyObject();
+//		findRedundancyObject.fingerprintInfo=fInfo;
+//		findRedundancyObject.sequenceNum= seq;
 		List<ConnStoreServerSocketAction> ths=new ArrayList<ConnStoreServerSocketAction>();
 		MessageProtocol mes=new MessageProtocol();
 		mes.messageType=MessageType.FIND_REDUNDANCY;
-		mes.content=findRedundancyObject;
+		mes.content=fInfo;
 		for(String id:systemConfig.redundancyServerIds){
 			ServerNode sn=fileConfig.get(id);
 			try {

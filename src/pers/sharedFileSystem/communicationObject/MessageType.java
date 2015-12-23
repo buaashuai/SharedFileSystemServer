@@ -54,6 +54,16 @@ public enum MessageType implements Serializable {
     REPLY_ADD_REDUNDANCY_INFO,
     /**
      * 客户端 ——> 存储服务器
+     * <p>删除冗余文件映射信息指令</p>
+     */
+    DELETE_REDUNDANCY_INFO,
+    /**
+     * 存储服务器 ——> 客户端
+     * <p>返回删除冗余文件映射信息结果</p>
+     */
+    REPLY_DELETE_REDUNDANCY_INFO,
+    /**
+     * 客户端 ——> 存储服务器
      * <p>添加指纹详细信息</p>
      */
     ADD_FINGERPRINTINFO,
@@ -83,6 +93,16 @@ public enum MessageType implements Serializable {
      * <p>连接是否正常</p>
      */
     SOCKET_MONITOR,
+    /**
+     * 客户端 ——> 存储服务器
+     * <p>删除文件引用</p>
+     */
+    DELETE_FREQUENCY,
+    /**
+     * 存储服务器 ——> 客户端
+     * <p>返回删除文件引用</p>
+     */
+    REPLY_DELETE_FREQUENCY,
     /**
      * 客户端 ——> 存储服务器
      * <p>添加文件引用</p>
