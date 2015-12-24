@@ -73,6 +73,16 @@ public enum MessageType implements Serializable {
      */
     REPLY_ADD_FINGERPRINTINFO,
     /**
+     * 客户端 ——> 存储服务器
+     * <p>删除指纹详细信息</p>
+     */
+    DELETE_FINGERPRINTINFO,
+    /**
+     * 存储服务器 ——> 客户端
+     * <p>删除指纹详细信息结果</p>
+     */
+    REPLY_DELETE_FINGERPRINTINFO,
+    /**
      * 客户端 ——> 冗余验证服务器
      * 客户端 ——> 存储服务器
      * <p>长连接保持</p>
@@ -123,4 +133,14 @@ public enum MessageType implements Serializable {
      * <p>返回指纹信息列表</p>
      */
     REPLY_GET_FINGERPRINT_LIST,
+    /**
+     * 客户端 ——> 存储服务器
+     * <p>验证文件名集合是否有效</p>
+     */
+    VALIDATE_FILENAMES,
+    /**
+     * 存储服务器 ——> 客户端
+     * <p>返回验证文件名集合是否有效</p>
+     */
+    REPLY_VALIDATE_FILENAMES,
 }

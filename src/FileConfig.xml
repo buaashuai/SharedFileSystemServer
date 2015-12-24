@@ -20,6 +20,18 @@
 					JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT
 				</whiteList>
 			</directoryNode>
+			<directoryNode id="temp2" nameType="static" name="temp2"><!--缓存文件夹 -->
+				<redundancy switch="on"><!--是否进行文件删冗 -->
+					<maxElement>50000000</maxElement><!--最大元素数 -->
+					<falsePositiveRate>0.00001</falsePositiveRate><!--误报率 -->
+					<fingerGenType type="server"><!--指纹产生方式 -->
+						<property>fingerPrint</property><!--指纹映射属性名 -->
+					</fingerGenType>
+				</redundancy>
+				<whiteList><!--该节点可以接收文件的白名单 -->
+					JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT
+				</whiteList>
+			</directoryNode>
 		</directoryNode>
 	</serverNode>
 	
