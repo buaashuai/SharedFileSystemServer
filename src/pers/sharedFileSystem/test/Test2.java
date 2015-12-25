@@ -137,11 +137,11 @@ private void deleteFileTest() throws Exception {
 	 * @throws Exception
 	 */
 	private void configTest() throws Exception {
-//		Hashtable<String, ServerNode> config = Config.getConfig();
-//		ServerNode serverNode = config.get("tempNode");
-//		serverNode.print("");
-//		System.out.println("*****************");
-		SystemConfig systemConfig=Config.SYSTEMCONFIG;
+		Hashtable<String, ServerNode> config = Config.getConfig();
+		ServerNode serverNode = config.get("tempNode");
+		serverNode.print("");
+		System.out.println("*****************");
+		SystemConfig systemConfig = Config.SYSTEMCONFIG;
 		systemConfig.print("");
 		System.out.println("*****************");
 	}

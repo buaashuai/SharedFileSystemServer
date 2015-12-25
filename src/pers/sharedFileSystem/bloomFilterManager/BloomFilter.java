@@ -54,6 +54,10 @@ public class BloomFilter {
 	 * 初始化指纹信息产生的线程集合（必须使用线程安全的集合，否则不能得到每个线程的状态）
 	 */
 	private Hashtable<String,ConnStoreServerSocketAction> initFingerprintThreads=new Hashtable<String,ConnStoreServerSocketAction>();
+	/**
+	 * 布隆过滤器中指纹信息的总数
+	 */
+	private volatile double fingerprintInfoCount;
 
 	/**
 	 * 根据配置文件计算系统需要的hash函数个数（validHashFunctionNum），和布隆过滤器需要的槽数（Slot_SIZE）
@@ -193,7 +197,7 @@ public class BloomFilter {
 	 *  私有的默认构造函数
 	 */
 	private BloomFilter() {
-
+		fingerprintInfoCount=0;
 	}
 
 	/**
@@ -267,9 +271,9 @@ public class BloomFilter {
 	 * @param fingerprint
 	 *            文件指纹
 	 */
-	public void addFingerPrint(String fingerprint) {
+	public double addFingerPrint(String fingerprint) {
 		if (fingerprint == null || fingerprint == "") {
-			return;
+			return 0;
 		}
 		Set<String> keys = hashFuncations.keySet();
 		int i = 1;
@@ -283,5 +287,7 @@ public class BloomFilter {
 			bitset.set(index);
 			i++;
 		}
+		fingerprintInfoCount++;
+		return fingerprintInfoCount;
 	}
 }

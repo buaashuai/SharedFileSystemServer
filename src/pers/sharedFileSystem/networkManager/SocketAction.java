@@ -191,8 +191,8 @@ public class SocketAction implements Runnable {
 		if(fInfo!=null) {
 //			new FingerprintAdapter().saveFingerprint(fInfo);
 //			LogRecord.FileHandleInfoLogger.info("BloomFilter save a new fingerPrint to disk ["+fInfo.getMd5()+"]");
-			BloomFilter.getInstance().addFingerPrint(fInfo.getMd5());
-			LogRecord.FileHandleInfoLogger.info("BloomFilter add a new fingerPrint ["+fInfo.getMd5()+"]");
+			double count=BloomFilter.getInstance().addFingerPrint(fInfo.getMd5());
+			LogRecord.FileHandleInfoLogger.info("BloomFilter add a new fingerPrint ["+fInfo.getMd5()+"] total= "+count);
 			reMessage.messageType=MessageType.REPLY_ADD_FINGERPRINT;
 			reMessage.messageCode=4000;
 			return reMessage;

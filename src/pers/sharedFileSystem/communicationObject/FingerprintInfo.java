@@ -13,19 +13,19 @@ public class FingerprintInfo  implements Serializable {
 
     //get和set方法的目的是为了将该类转换成json对象
     public String getMd5() {
-        return Md5;
+        return md5;
     }
 
     public String getNodeId() {
-        return NodeId;
+        return nodeId;
     }
 
     public String getFilePath() {
-        return FilePath;
+        return filePath;
     }
 
     public String getFileName() {
-        return FileName;
+        return fileName;
     }
 
     public FileType getFileType() {
@@ -34,24 +34,24 @@ public class FingerprintInfo  implements Serializable {
 
     public String getUpdateTime() {
         SimpleDateFormat dateFm = new SimpleDateFormat("yyyyMMddHHmmss"); // 格式化当前系统日期
-        String time = dateFm.format(new Date());
+        String time = dateFm.format(updateTime);
         return time;
     }
 
     public void setMd5(String md5) {
-        Md5 = md5;
+        this.md5 = md5;
     }
 
     public void setNodeId(String nodeId) {
-        NodeId = nodeId;
+        this.nodeId = nodeId;
     }
 
     public void setFilePath(String filePath) {
-        FilePath = filePath;
+        this.filePath = filePath;
     }
 
     public void setFileName(String fileName) {
-        FileName = fileName;
+        this.fileName = fileName;
     }
 
     public void setFileType(FileType fileType) {
@@ -59,25 +59,25 @@ public class FingerprintInfo  implements Serializable {
     }
 
     public void setUpdateTime(Date updateTime) {
-        UpdateTime = updateTime;
+        this.updateTime = updateTime;
     }
 
     /**
      * 文件指纹
      */
-    private String Md5;
+    private String md5;
     /**
      *文件存储的节点编号
      */
-    private String NodeId;
+    private String nodeId;
     /**
      * 文件相对路径
      */
-    private String FilePath;
+    private String filePath;
     /**
      * 文件名（带后缀）
      */
-    private String FileName;
+    private String fileName;
     /**
      * 文件类型
      */
@@ -86,21 +86,21 @@ public class FingerprintInfo  implements Serializable {
     /**
      * 添加日期
      */
-    private Date UpdateTime;
+    private Date updateTime;
 
     public int getFrequency() {
-        return Frequency;
+        return frequency;
     }
 
     public void setFrequency(int frequency) {
-        Frequency = frequency;
+        this.frequency = frequency;
     }
 
 
     /**
      * 文件被引用的频率
      */
-    private int  Frequency;
+    private int frequency;
 
     public boolean getPhysicalDeletedByTrueUserFlag() {
         return physicalDeletedByTrueUserFlag;
@@ -118,18 +118,18 @@ public class FingerprintInfo  implements Serializable {
     public FingerprintInfo(){}
 
     public  FingerprintInfo(String md5,String nodeId,String filePath,String fileName,FileType type){
-        this.Md5=md5;
-        this.NodeId=nodeId;
-        this.FilePath=filePath;
-        this.FileName=fileName;
+        this.md5 =md5;
+        this.nodeId =nodeId;
+        this.filePath =filePath;
+        this.fileName =fileName;
         this.fileType=type;
-        this.UpdateTime=new Date();
-        this.Frequency=0;
+        this.updateTime =new Date();
+        this.frequency =0;
         this.physicalDeletedByTrueUserFlag =false;
     }
 
     public  FingerprintInfo(String md5,FileType type){
-        this.Md5=md5;
+        this.md5 =md5;
         this.fileType=type;
     }
 
@@ -137,13 +137,13 @@ public class FingerprintInfo  implements Serializable {
         String str="";
         SimpleDateFormat dateFm = new SimpleDateFormat("yyyyMMddHHmmss"); // 格式化当前系统日期
         String time = dateFm.format(new Date());
-        str+="UpdateTime: "+time+" , ";
-        str+="Md5: "+Md5+" , ";
-        str+="NodeId: "+NodeId+" , ";
-        str+="FilePath: "+FilePath+" , ";
-        str+="FileName: "+FileName+" , ";
+        str+="updateTime: "+time+" , ";
+        str+="md5: "+ md5 +" , ";
+        str+="nodeId: "+ nodeId +" , ";
+        str+="filePath: "+ filePath +" , ";
+        str+="fileName: "+ fileName +" , ";
         str+="fileType: "+fileType+" , ";
-        str+="Frequency: "+Frequency+" , ";
+        str+="frequency: "+ frequency +" , ";
         str+="physicalDeletedByTrueUserFlag: "+ physicalDeletedByTrueUserFlag;
         return str;
     }

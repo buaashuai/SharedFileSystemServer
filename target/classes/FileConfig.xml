@@ -7,8 +7,21 @@
 		<serverPort>9996</serverPort><!--该服务器上的文件系统端口-->
 		<userName>WangShuai</userName><!-- 该服务器的登录用户名 Administrator-->
 		<password>0987654321</password><!-- 该服务器的登录密码 C:/Users/dell/Desktop/temp-->
+		<url>http://www.xxx.com</url><!--该服务器的http访问路径-->
 		<directoryNode id="tempStoreNode" storePath="E:/ftp"><!--该服务器的存储根路径 -->
 			<directoryNode id="temp" nameType="static" name="temp"><!--缓存文件夹 -->
+				<redundancy switch="on"><!--是否进行文件删冗 -->
+					<maxElement>50000000</maxElement><!--最大元素数 -->
+					<falsePositiveRate>0.00001</falsePositiveRate><!--误报率 -->
+					<fingerGenType type="server"><!--指纹产生方式 -->
+						<property>fingerPrint</property><!--指纹映射属性名 -->
+					</fingerGenType>
+				</redundancy>
+				<whiteList><!--该节点可以接收文件的白名单 -->
+					JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT
+				</whiteList>
+			</directoryNode>
+			<directoryNode id="temp2" nameType="static" name="temp2"><!--缓存文件夹 -->
 				<redundancy switch="on"><!--是否进行文件删冗 -->
 					<maxElement>50000000</maxElement><!--最大元素数 -->
 					<falsePositiveRate>0.00001</falsePositiveRate><!--误报率 -->

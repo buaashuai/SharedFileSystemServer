@@ -17,6 +17,14 @@ public enum FileType implements Serializable {
 	 */
 	UNCERTAIN("??????????"),
 	/**
+	 * 目录文件类型
+	 */
+	DIRECTORY("directory"),
+	/**
+	 * 普通文件类型
+	 */
+	DOCUMENT("document"),
+	/**
 	 * JEPG.jpg
 	 */
 	JPEG("ffd8ffe000104a464946"),
@@ -268,7 +276,7 @@ public enum FileType implements Serializable {
 	/**
 	 * Constructor.
 	 *
-	 * @param type
+	 * @param value
 	 */
 	FileType(String value) {
 		this.value = value;

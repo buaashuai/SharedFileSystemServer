@@ -170,6 +170,7 @@ public class ConfigParse {
         serverNode.Id = element.getAttributeValue("id");
         serverNode.UserName = element.getChildText("userName");
         serverNode.Password = element.getChildText("password");
+        serverNode.URL = element.getChildText("url");
         List<Element> e_directoryNodes = element.getChildren("directoryNode");
         List<Element> e_backupNodes = element.getChildren("backupNode");
         List<DirectoryNode> childNodes = new ArrayList<DirectoryNode>();
