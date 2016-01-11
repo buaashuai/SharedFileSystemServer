@@ -126,16 +126,15 @@ public class SocketAction implements Runnable {
 								break;
 							}
 						}
-						if(n==num){//全部查找都结束，并且都没有找到
-							isRunning=false;
-							break;
-						}
+					}
+					if(n==num || fingerprintInfo!=null){//全部查找都结束，或者某个存储服务器找到了该指纹信息
+						isRunning=false;
 					}
 					try {
 						Thread.sleep(10);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
-						break;
+						isRunning=false;
 					}
 				}
 				//找到之后通知其他正在查找的存储服务器停止查找
