@@ -38,6 +38,23 @@ public class ConfigParse {
     }
 
     /**
+     * 解析目录结点的区间属性
+     * @param element IntervalProperty节点的dom对象
+     * @return 解析之后的IntervalProperty对象
+     */
+    private IntervalProperty parseIntervalProperty(Element element,NodeNameType nameType) {
+        IntervalProperty interval=new IntervalProperty();
+        String min = element.getChildText("min");
+        String max = element.getChildText("max");
+        String directoryNodeId = element.getChildText("directoryNodeId");
+        if(nameType==NodeNameType.DYNAMIC)
+            interval.Min=min;
+        interval.Max=max;
+        interval.DirectoryNodeId=directoryNodeId;
+        return  interval;
+    }
+
+    /**
      * 对配置文件中的redundancy节点进行解析
      *
      * @param element redundancy节点的dom对象
@@ -84,7 +101,7 @@ public class ConfigParse {
     private DirectoryNode parseDirectoryNode(Element element, String path,
                                              Hashtable<String, DirectoryNode> directoryNodeTable,
                                              List<FileType> whiteList, RedundancyInfo redundancy,
-                                             ServerNode serverNode,String storePath) {
+                                             ServerNode serverNode,String storePath,Node parent) {
         DirectoryNode directoryNode = new DirectoryNode();
         directoryNode.WhiteList = whiteList;
         directoryNode.Redundancy = redundancy;
@@ -117,6 +134,17 @@ public class ConfigParse {
             // 解析节点的删冗信息
             directoryNode.Redundancy = parseRedundancyInfo(e_redundancy);
         }
+        List<Element> e_expands = element.getChildren("interval");
+        if (e_expands != null) {
+            List<IntervalProperty>Intervals= new ArrayList<IntervalProperty>();
+            IntervalProperty interval;
+            // 解析节点的扩展区间信息
+            for (Element e : e_expands) {
+                interval=parseIntervalProperty(e,directoryNode.NameType);
+                Intervals.add(interval);
+            }
+            directoryNode.Intervals = Intervals;
+        }
         String m_whiteList = element.getChildText("whiteList");
         if (CommonUtil.validateString(m_whiteList)) {
             directoryNode.WhiteList = parseFileTypes(m_whiteList);
@@ -128,13 +156,14 @@ public class ConfigParse {
             // 父节点的白名单就是子节点的白名单，父节点的删冗信息就是子节点的删冗信息
             c_directoryNode = parseDirectoryNode(e, path, directoryNodeTable,
                     directoryNode.WhiteList, directoryNode.Redundancy,
-                    serverNode,directoryNode.StorePath);
+                    serverNode,directoryNode.StorePath,directoryNode);
             childNodes.add(c_directoryNode);
             directoryNodeTable.put(c_directoryNode.Id, c_directoryNode);// 每解析出一个子节点就将它加入directoryNodeTable
         }
         directoryNodeTable.put(directoryNode.Id, directoryNode);// 每解析出一个节点就将它加入directoryNodeTable
         directoryNode.Path = path;
         directoryNode.ChildNodes = childNodes;
+        directoryNode.Parent=parent;
         return directoryNode;
     }
 
@@ -178,7 +207,7 @@ public class ConfigParse {
             DirectoryNode directoryNode = new DirectoryNode();
             directoryNode = parseDirectoryNode(e, "", directoryNodeTable,
                     directoryNode.WhiteList, directoryNode.Redundancy,
-                    serverNode,"");
+                    serverNode,"",serverNode);
             childNodes.add(directoryNode);
         }
         for(Element e:e_backupNodes){

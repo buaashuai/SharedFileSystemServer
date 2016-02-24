@@ -2,5 +2,5 @@
 <SystemConfig>
 		<port>9998</port><!-- 冗余验证服务器的监听端口 -->
 		<redundancyServer>tempNode</redundancyServer><!--需要发送冗余验证消息的存储服务器编号-->
-		<redundancyServer>renderNode</redundancyServer>
+		<redundancyServer>storeNode</redundancyServer>
 </SystemConfig>
