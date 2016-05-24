@@ -43,7 +43,7 @@
 		<userName>1709</userName><!-- 该服务器的登录用户名 -->
 		<password>naruto</password><!-- 该服务器的登录密码 -->
 		<url>http://www.xxx.com</url><!--该服务器的http访问路径-->
-		<directoryNode id="renderStoreNode" storePath="E:/ftpServer"><!--该服务器的存储根路径 -->
+		<directoryNode id="renderStoreNode" storePath="D:/FileSystemLog"><!--该服务器的存储根路径 -->
 			<directoryNode id="renderConfig" nameType="static" name="RenderConfig"><!-- 官方场景配置文件 -->
 				<redundancy switch="on"><!--是否进行文件删冗 -->
 					<maxElement>50000000</maxElement><!--最大元素数 -->

@@ -20,7 +20,7 @@ import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.logManager.LogRecord;
 
 /**
- * 监控某个连接（客户端）发来的消息
+ * 监听某个连接（客户端）发来的消息
  */
 public class SocketAction implements Runnable {
 	/**
@@ -255,7 +255,7 @@ public class SocketAction implements Runnable {
 	}
 
 	/**
-	 * 关闭此socket连接，停止对该连接的监控
+	 * 关闭此socket连接，停止对该连接的监听
 	 */
 	public void overThis() {
 		if (run)

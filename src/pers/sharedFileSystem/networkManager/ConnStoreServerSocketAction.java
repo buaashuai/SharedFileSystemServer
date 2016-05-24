@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 监控存储服务器发来的消息线程
+ * 监听存储服务器发来的消息线程
  */
 public class ConnStoreServerSocketAction implements Runnable {
 	/**
