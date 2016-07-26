@@ -2,4 +2,4 @@
 .settings
 bin
 lib
-target
+target/
