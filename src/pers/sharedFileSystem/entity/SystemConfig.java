@@ -1,18 +1,20 @@
 package pers.sharedFileSystem.entity;
 
+import java.util.List;
+
 /**
  * 文件系统运行配置类
  */
 public class SystemConfig {
     /**
-     * 存储服务器上的文件系统监听端口
+     * 冗余验证服务器上的监听端口
      */
-    public Integer FileSystemPort;
+    public Integer Port;
 
     /**
-     * 当前存储服务器的服务器节点编号
+     * 需要发送冗余验证消息的存储服务器编号列表
      */
-    public String ServerNodeName;
+    public List<String>redundancyServerIds;
 
     public SystemConfig(){
 
@@ -24,7 +26,11 @@ public class SystemConfig {
      *            缩进tab
      */
     public void print(String tabs) {
-        System.out.println(tabs + "FileSystemPort: " + FileSystemPort);
-        System.out.println(tabs + "ServerNodeName: " + ServerNodeName);
+        System.out.println(tabs + "Port: " + Port);
+        System.out.print(tabs + "redundancyServerIds: ");
+        for(String str:redundancyServerIds){
+            System.out.print(str + ",");
+        }
+        System.out.println("");
     }
 }

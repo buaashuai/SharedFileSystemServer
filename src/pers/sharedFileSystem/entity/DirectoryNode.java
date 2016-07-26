@@ -9,7 +9,7 @@ import java.util.List;
  * <p>
  * 本类是对资源目录树中文件夹节点的抽象
  * </p>
- * 
+ *
  * @author buaashuai
  *
  */
@@ -48,6 +48,14 @@ public class DirectoryNode extends Node implements Serializable {
 	 * Path是从该节点所属的根节点到该节点的路径，相对路径
 	 */
 	public String Path;
+	/**
+	 * 该结点的父结点对象
+	 */
+	public Node Parent;
+	/**
+	 * 扩展区间属性集合
+	 */
+	public List<IntervalProperty>Intervals;
 
 	public DirectoryNode(){
 		WhiteList = new ArrayList<FileType>();
@@ -56,7 +64,7 @@ public class DirectoryNode extends Node implements Serializable {
 	}
 	/**
 	 * 打印节点信息
-	 * 
+	 *
 	 * @param tabs
 	 *            缩进tab
 	 */
@@ -71,6 +79,7 @@ public class DirectoryNode extends Node implements Serializable {
 		System.out.println(tabs + "Redundancy: ");
 		this.Redundancy.print(tabs + "\t");
 		System.out.println(tabs + "WhiteList: " + WhiteList.toString());
+		System.out.println(tabs + "Parent: " + Parent.Id);
 		System.out.println(tabs + "ChildNodes: "+ChildNodes.size());
 		int num=0;
 		for (DirectoryNode directoryNode : ChildNodes) {
@@ -78,6 +87,14 @@ public class DirectoryNode extends Node implements Serializable {
 				System.out.println("");
 			num++;
 			directoryNode.print(tabs + "\t");
+		}
+		num=0;
+		System.out.println(tabs + "Intervals: "+Intervals.size());
+		for (IntervalProperty intervalProperty : Intervals) {
+			if(num>0)
+				System.out.println("");
+			num++;
+			intervalProperty.print(tabs + "\t");
 		}
 	}
 }

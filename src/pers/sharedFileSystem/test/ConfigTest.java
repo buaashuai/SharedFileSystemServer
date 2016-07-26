@@ -7,7 +7,6 @@ import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import pers.sharedFileSystem.shareInterface.DirectoryAdapter;
 
 public class ConfigTest {
 
@@ -60,16 +59,16 @@ public class ConfigTest {
 
 		// FileUtil.delete("D:\\EclipseProject\\deploy\\webapps\\static\\OlineSacrificeFiles");
 
-		DirectoryAdapter directoryAdapter = new DirectoryAdapter("temp",
-				JSONObject.fromObject(map));
-		JSONArray re2 = directoryAdapter.getAllFilePaths();
-		JSONArray re3 = JSONArray
-				.fromObject(directoryAdapter.getAllFileNames());
-		List<String> names = new ArrayList<String>();
-		names.add("本科毕设 - 副本.RAR");
-		directoryAdapter.deleteSelective(names);
-		System.out.println(re2);
-		System.out.println(re3);
+//		DirectoryAdapter directoryAdapter = new DirectoryAdapter("temp",
+//				JSONObject.fromObject(map));
+//		JSONArray re2 = directoryAdapter.getAllFilePaths();
+//		JSONArray re3 = JSONArray
+//				.fromObject(directoryAdapter.getAllFileNames());
+//		List<String> names = new ArrayList<String>();
+//		names.add("本科毕设 - 副本.RAR");
+//		directoryAdapter.deleteSelective(names);
+//		System.out.println(re2);
+//		System.out.println(re3);
 		// Feedback f1 = new Feedback();
 		// f1.ErrorInfo = "dsfgsdgf";
 		// f1.Info.addFingerPrint("dsfg");

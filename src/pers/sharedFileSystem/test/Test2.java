@@ -3,22 +3,16 @@ package pers.sharedFileSystem.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
 import pers.sharedFileSystem.bloomFilterManager.hashFunctions.SHA1_MD5;
 import pers.sharedFileSystem.configManager.Config;
-import pers.sharedFileSystem.entity.FingerprintInfo;
+import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.entity.ServerNode;
 import pers.sharedFileSystem.entity.SystemConfig;
-import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
-import pers.sharedFileSystem.shareInterface.DirectoryAdapter;
-import pers.sharedFileSystem.shareInterface.FileAdapter;
 
 public class Test2 {
 
@@ -65,19 +59,19 @@ public class Test2 {
 		map.put("hehe","2");
 		map.put("sceneTypeId","1");
 		map.put("hallTypeId","7");
-		FileAdapter fileAdapter = new FileAdapter("hallType","1.txt",map);
-		JSONObject re = fileAdapter.saveFileTo("hallType",
-				"23.txt", map);
-		System.out.println(re);
-		FileAdapter fileAdapter2 = new FileAdapter("hallType","2.txt",map);
-		JSONObject re2 = fileAdapter.saveFileTo("hallType",
-				"24.txt", map);
-		System.out.println(re2);
-		if (re.getInt("Errorcode") != 3000) {
-			System.out.println("false");
-		} else {
-			System.out.println("success");
-		}
+//		FileAdapter fileAdapter = new FileAdapter("hallType","1.txt",map);
+//		JSONObject re = fileAdapter.saveFileTo("hallType",
+//				"23.txt", map);
+//		System.out.println(re);
+//		FileAdapter fileAdapter2 = new FileAdapter("hallType","2.txt",map);
+//		JSONObject re2 = fileAdapter.saveFileTo("hallType",
+//				"24.txt", map);
+//		System.out.println(re2);
+//		if (re.getInt("Errorcode") != 3000) {
+//			System.out.println("false");
+//		} else {
+//			System.out.println("success");
+//		}
 	}
 
 	/**
@@ -91,16 +85,16 @@ private void deleteFileTest() throws Exception {
 	map.put("hehe","2");
 	map.put("sceneTypeId","1");
 	map.put("hallTypeId","7");
-	DirectoryAdapter dicAdapter = new DirectoryAdapter("hehe", map);
-	List<String> fileNames=new ArrayList<String>();
-	fileNames.add("1.txt");
+//	DirectoryAdapter dicAdapter = new DirectoryAdapter("hehe", map);
+//	List<String> fileNames=new ArrayList<String>();
+//	fileNames.add("1.txt");
 //	fileNames.add("24.txt");
 //	FileAdapter fileAdapter = new FileAdapter("hehe",
 //			"2.jpg", map);
 //	FileAdapter fileAdapter2 = new FileAdapter("hehe",
 //			"4.jpg", map);
-	JSONObject re1 =dicAdapter.deleteSelective(fileNames);
-	System.out.println(re1);
+//	JSONObject re1 =dicAdapter.deleteSelective(fileNames);
+//	System.out.println(re1);
 //	JSONObject re2 =fileAdapter.delete();
 //	System.out.println(re2);
 //	JSONObject re3 =fileAdapter2.delete();
@@ -117,11 +111,11 @@ private void deleteFileTest() throws Exception {
 		map.put("hallTypeId", "3");
 		map.put("categoryId", "5");
 		map.put("hehe","2");
-		DirectoryAdapter dicAdapter = new DirectoryAdapter("tempStoreNode", map);
-		List<String> fileNames=dicAdapter.getAllFileNames();
-		for(String str:fileNames){
-			System.out.println(str);
-		}
+//		DirectoryAdapter dicAdapter = new DirectoryAdapter("tempStoreNode", map);
+//		List<String> fileNames=dicAdapter.getAllFileNames();
+//		for(String str:fileNames){
+//			System.out.println(str);
+//		}
 	}
 
 	/**
@@ -133,9 +127,9 @@ private void deleteFileTest() throws Exception {
 		map.put("hallTypeId", "3");
 		map.put("categoryId", "5");
 		map.put("hehe","2");
-		DirectoryAdapter dicAdapter = new DirectoryAdapter("categoryId", map);
-		JSONArray re=dicAdapter.getAllFilePaths();
-		System.out.println(re);
+//		DirectoryAdapter dicAdapter = new DirectoryAdapter("categoryId", map);
+//		JSONArray re=dicAdapter.getAllFilePaths();
+//		System.out.println(re);
 	}
 	/**
 	 * 配置文件解析测试
@@ -147,7 +141,7 @@ private void deleteFileTest() throws Exception {
 		ServerNode serverNode = config.get("tempNode");
 		serverNode.print("");
 		System.out.println("*****************");
-		SystemConfig systemConfig=Config.SYSTEMCONFIG;
+		SystemConfig systemConfig = Config.SYSTEMCONFIG;
 		systemConfig.print("");
 		System.out.println("*****************");
 	}
@@ -192,23 +186,12 @@ private void deleteFileTest() throws Exception {
 		}
 	}
 
-	/**
-	 * 指纹信息管理类测试
-	 */
-	private void FingerprintAdapterTest(){
-			FingerprintAdapter fingerprintAdapter=new FingerprintAdapter();
-//			FingerprintInfo fingerprintInfo=new FingerprintInfo("213","e:/df","a.txt");
-//			fingerprintAdapter.saveFingerprint("tempStoreNode",fingerprintInfo);
-			List<FingerprintInfo>fingerprintInfos=fingerprintAdapter.getAllFingerprintInfo("tempStoreNode");
-			for(FingerprintInfo info:fingerprintInfos){
-				System.out.println(info.Md5+" "+info.FilePath+" "+info.FileName);
-			}
-	}
+
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Test2 test2 = new Test2();
-		test2.FingerprintAdapterTest();
+		test2.configTest();
 	}
 
 }

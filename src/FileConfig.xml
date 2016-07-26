@@ -4,12 +4,25 @@
 	<serverNode id="tempNode"><!-- 缓存服务器节点 -->
 		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器) 192.168.192.100-->
 		<port>21</port><!--ftp端口-->
-		<serverPort>9998</serverPort><!--该服务器上的文件系统端口-->
-		<userName>Administrator</userName><!-- 该服务器的登录用户名 Administrator-->
-		<password>0987654321</password><!-- 该服务器的登录密码 -->
-		<directoryNode id="tempStoreNode" storePath="D:/EclipseProject/deploy/webapps/OlineSacrifice/static"><!--该服务器的存储根路径 -->
+		<serverPort>9996</serverPort><!--该服务器上的文件系统端口-->
+		<userName>WangShuai</userName><!-- 该服务器的登录用户名 Administrator-->
+		<password>0987654321</password><!-- 该服务器的登录密码 C:/Users/dell/Desktop/temp-->
+		<url>http://www.xxx.com</url><!--该服务器的http访问路径-->
+		<directoryNode id="tempStoreNode" storePath="E:/ftpServer"><!--该服务器的存储根路径 -->
 			<directoryNode id="temp" nameType="static" name="temp"><!--缓存文件夹 -->
-				<redundancy switch="off"><!--是否进行文件删冗 -->
+				<redundancy switch="on"><!--是否进行文件删冗 -->
+					<maxElement>50000000</maxElement><!--最大元素数 -->
+					<falsePositiveRate>0.00001</falsePositiveRate><!--误报率 -->
+					<fingerGenType type="server"><!--指纹产生方式 -->
+						<property>fingerPrint</property><!--指纹映射属性名 -->
+					</fingerGenType>
+				</redundancy>
+				<whiteList><!--该节点可以接收文件的白名单 -->
+					JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT
+				</whiteList>
+			</directoryNode>
+			<directoryNode id="temp2" nameType="static" name="temp2"><!--缓存文件夹 -->
+				<redundancy switch="on"><!--是否进行文件删冗 -->
 					<maxElement>50000000</maxElement><!--最大元素数 -->
 					<falsePositiveRate>0.00001</falsePositiveRate><!--误报率 -->
 					<fingerGenType type="server"><!--指纹产生方式 -->
@@ -21,46 +34,42 @@
 				</whiteList>
 			</directoryNode>
 		</directoryNode>
-		<backupNode id="backup1">
-			<ip>10.24.208.103</ip><!--节点存储位置(本地/远程服务器) 192.168.192.100-->
-			<port>21</port><!--ftp端口-->
-			<serverPort>9998</serverPort><!--该服务器上的文件系统端口-->
-			<userName>dell</userName><!-- 该服务器的登录用户名 -->
-			<password>0987654321</password><!-- 该服务器的登录密码 -->
-		</backupNode>
-		<backupNode id="backup2">
-			<ip>10.24.208.103</ip><!--节点存储位置(本地/远程服务器) 192.168.192.100-->
-			<port>21</port><!--ftp端口-->
-			<serverPort>9998</serverPort><!--该服务器上的文件系统端口-->
-			<userName>dell</userName><!-- 该服务器的登录用户名 -->
-			<password>0987654321</password><!-- 该服务器的登录密码 -->
-		</backupNode>
 	</serverNode>
-	
+
 	<serverNode id="renderNode"><!-- 渲染场景存储服务器节点 -->
 		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器)10.24.190.12-->
 		<port>21</port><!--ftp端口-->
-		<serverPort>9998</serverPort><!--该服务器上的文件系统端口-->
-		<userName>dell</userName><!-- 该服务器的登录用户名 -->
-		<password>0987654321</password><!-- 该服务器的登录密码 -->
-		<directoryNode id="renderStoreNode" storePath="D:/EclipseProject/deploy/webapps/OlineSacrifice/static"><!--该服务器的存储根路径 -->
+		<serverPort>9996</serverPort><!--该服务器上的文件系统端口-->
+		<userName>1709</userName><!-- 该服务器的登录用户名 -->
+		<password>naruto</password><!-- 该服务器的登录密码 -->
+		<url>http://www.xxx.com</url><!--该服务器的http访问路径-->
+		<directoryNode id="renderStoreNode" storePath="D:/FileSystemLog"><!--该服务器的存储根路径 -->
 			<directoryNode id="renderConfig" nameType="static" name="RenderConfig"><!-- 官方场景配置文件 -->
-				<directoryNode id="sceneType" nameType="dynamic" property="sceneTypeId"><!--官方的灵堂场景配置文件 -->
-					<directoryNode id="hallType" nameType="dynamic" property="hallTypeId"></directoryNode><!--官方的场景对应的灵堂配置文件 -->
-				</directoryNode>
+				<redundancy switch="on"><!--是否进行文件删冗 -->
+					<maxElement>50000000</maxElement><!--最大元素数 -->
+					<falsePositiveRate>0.00001</falsePositiveRate><!--误报率 -->
+					<fingerGenType type="server"><!--指纹产生方式 -->
+						<property>fingerPrint</property><!--指纹映射属性名 -->
+					</fingerGenType>
+				</redundancy>
+				<whiteList><!--该节点可以接收文件的白名单 -->
+					JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT
+				</whiteList>
+				<directoryNode id="hallType" nameType="dynamic" property="hallTypeId"></directoryNode><!--官方的场景对应的灵堂配置文件 -->
 			</directoryNode>
 		</directoryNode>
 	</serverNode>
-	
+
 	<serverNode id="storeNode"><!-- 文件存储服务器节点 -->
 		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器) 192.168.192.100-->
 		<port>21</port><!--ftp端口-->
-		<serverPort>9998</serverPort><!--该服务器上的文件系统端口-->
-		<userName>dell</userName><!-- 该服务器的登录用户名 -->
-		<password>0987654321</password><!-- 该服务器的登录密码 -->
-		<directoryNode id="fileStoreNode" storePath="D:/EclipseProject/deploy/webapps/OlineSacrifice/static"><!--该服务器的存储根路径 -->
+		<serverPort>9996</serverPort><!--该服务器上的文件系统端口-->
+		<userName>1709</userName><!-- 该服务器的登录用户名 -->
+		<password>naruto</password><!-- 该服务器的登录密码 -->
+		<url>http://www.xxx.com</url><!--该服务器的http访问路径-->
+		<directoryNode id="fileStoreNode" storePath="e:/ftpServer"><!--该服务器的存储根路径 -->
 			<directoryNode id="filePath" nameType="static" name="OlineSacrificeFiles"><!--网祭平台文件根目录 -->
-				<redundancy switch="on"><!--是否进行文件删冗  on | off-->
+				<redundancy switch="off"><!--是否进行文件删冗  on | off-->
 					<maxElement>50000000</maxElement><!--最大元素数 -->
 					<falsePositiveRate>0.00001</falsePositiveRate><!--误报率 -->
 					<fingerGenType type="server"><!--指纹产生方式 server | client-->

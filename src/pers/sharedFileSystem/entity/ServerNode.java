@@ -5,7 +5,7 @@ import java.util.Hashtable;
 
 /**
  * 应用系统所对应某个的文件系统的根节点
- * 
+ *
  * @author buaashuai
  *
  */
@@ -27,9 +27,13 @@ public class ServerNode extends Node implements Serializable {
 	 */
 	public Hashtable<String, DirectoryNode> DirectoryNodeTable;
 	/**
-	 * ServerNode包含的节点id和备份节点对象的映射
+	 * ServerNode包含的节点id和备份节点对象的映射（此字段暂时无用）
 	 */
 	public Hashtable<String,BackupNode>BackupNodeTable;
+	/**
+	 * 默认使用的备份节点编号（此字段暂时无用）
+	 */
+	public String BackupNodeId;
 	/**
 	 * ServerNode服务器的用户名
 	 */
@@ -43,8 +47,16 @@ public class ServerNode extends Node implements Serializable {
 	 */
 	public RedundancyInfo ServerRedundancy;
 	/**
+	 * 该存储服务器运行是否正常
+	 */
+	public boolean isRunning;
+	/**
+	 * 该服务器的http访问路径
+	 */
+	public String URL;
+	/**
 	 * 打印节点信息
-	 * 
+	 *
 	 * @param tabs
 	 *            缩进tab
 	 */
@@ -55,6 +67,7 @@ public class ServerNode extends Node implements Serializable {
 		System.out.println(tabs + "ServerPort: " + ServerPort);
 		System.out.println(tabs + "UserName: " + UserName);
 		System.out.println(tabs + "Password: " + Password);
+		System.out.println(tabs + "URL: " + URL);
 		System.out.println(tabs + "ServerRedundancy: ");
 		this.ServerRedundancy.print(tabs + "\t");
 		System.out.println(tabs + "ChildNodes: "+ChildNodes.size());
