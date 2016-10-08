@@ -86,7 +86,7 @@ public class ConnStoreServerSocketAction implements Runnable {
 		FingerprintInfo fInfo=(FingerprintInfo)mes.content;
 		String str="";
 		if(fInfo!=null) {
-			str="receive REPLY_FIND_REDUNDANCY from "+socket.getInetAddress().toString()+" fingerPrint ["+fInfo.getMd5()+"] NodeId: "+fInfo.getNodeId()+" path: "+fInfo.getFilePath()+fInfo.getFileName();
+			str="receive REPLY_FIND_REDUNDANCY from "+socket.getInetAddress().toString()+" fingerPrint ["+fInfo.getMd5()+"] NodeId: "+fInfo.getNodeId()+", path: "+fInfo.getFilePath()+fInfo.getFileName();
 		}else
 			str="receive REPLY_FIND_REDUNDANCY from "+socket.getInetAddress().toString()+" fingerPrint null";
 		LogRecord.RunningInfoLogger.info(str);

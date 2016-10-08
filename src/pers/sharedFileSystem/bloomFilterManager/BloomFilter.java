@@ -136,7 +136,7 @@ public class BloomFilter {
 						st.getOutputStream());
 				oos.writeObject(mes);
 				oos.flush();
-				LogRecord.RunningInfoLogger.info("send GET_FINGERPRINT_LIST comand to"+sn.Ip+":"+sn.ServerPort);
+				LogRecord.RunningInfoLogger.info("send GET_FINGERPRINT_LIST comand to "+sn.Ip+":"+sn.ServerPort);
 				ConnStoreServerSocketAction socketAction = new ConnStoreServerSocketAction(st);
 				Thread thread = new Thread(socketAction);
 				initFingerprintThreads.put(sn.Ip,socketAction);
