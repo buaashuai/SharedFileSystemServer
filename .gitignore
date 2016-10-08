@@ -3,7 +3,7 @@
 ###############
 target
 bin
-.idea
+.idea/workspace.xml
 .settings
 *.eml
 *.iml
