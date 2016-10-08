@@ -1,5 +1,10 @@
+###############
+#    folder   #
+###############
+target
+bin
 .idea
 .settings
-bin
-lib
-target/
+*.eml
+*.iml
+*.userlibraries
