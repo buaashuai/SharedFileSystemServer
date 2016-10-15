@@ -127,12 +127,12 @@ public enum MessageType implements Serializable {
      * 冗余验证服务器 ——> 存储服务器
      * <p>获取指纹信息列表</p>
      */
-    GET_FINGERPRINT_LIST,
+    REPLY_SEND_FINGERPRINT_LIST,
     /**
      * 存储服务器 ——> 冗余验证服务器
      * <p>返回指纹信息列表</p>
      */
-    REPLY_GET_FINGERPRINT_LIST,
+    SEND_FINGERPRINT_LIST,
     /**
      * 客户端 ——> 存储服务器
      * <p>验证文件名集合是否有效</p>
@@ -143,4 +143,9 @@ public enum MessageType implements Serializable {
      * <p>返回验证文件名集合是否有效</p>
      */
     REPLY_VALIDATE_FILENAMES,
+    /**
+     * 存储服务器 ——> 冗余验证服务器
+     * <p>发送结点配置信息 FileConfig.xml 的内容对象</p>
+     */
+    SEND_CONFIG
 }

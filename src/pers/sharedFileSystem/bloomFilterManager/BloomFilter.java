@@ -45,7 +45,7 @@ public class BloomFilter {
 	/**
 	 * 资源目录树配置文件
 	 */
-	private Hashtable<String, ServerNode> fileConfig= Config.getConfig();
+//	private Hashtable<String, ServerNode> fileConfig= Config.getConfig();
 	/**
 	 * 服务端配置文件
 	 */
@@ -64,11 +64,13 @@ public class BloomFilter {
 	 */
 	private void calculateHashFunctionNum(){
 		double maxElement=0, falsePositiveRate=Double.MAX_VALUE;
-		for(ServerNode sNode:Config.getConfig().values()){
-			RedundancyInfo  serverRedundancy=sNode.ServerRedundancy;
-			maxElement+=serverRedundancy.MaxElementNum;
-			falsePositiveRate=Math.min(falsePositiveRate,serverRedundancy.FalsePositiveRate);
-		}
+//		for(ServerNode sNode:Config.getConfig().values()){
+//			RedundancyInfo  serverRedundancy=sNode.ServerRedundancy;
+//			maxElement+=serverRedundancy.MaxElementNum;
+//			falsePositiveRate=Math.min(falsePositiveRate,serverRedundancy.FalsePositiveRate);
+//		}
+        maxElement = systemConfig.MaxElement;
+        falsePositiveRate = systemConfig.FalsePositiveRate;
 //		System.out.println("m="+maxElement+" p="+falsePositiveRate);
 		double m=maxElement*(Math.log(falsePositiveRate)/Math.log(0.6185));
 		Slot_SIZE =(int)m;
@@ -126,26 +128,26 @@ public class BloomFilter {
 	 */
 	private boolean sendGetFingerprintListMessageToStoreNode(){
 
-		MessageProtocol mes=new MessageProtocol();
-		mes.messageType= MessageType.GET_FINGERPRINT_LIST;
-		for(String id:systemConfig.redundancyServerIds){
-			ServerNode sn=fileConfig.get(id);
-			try {
-				Socket st=new Socket(sn.Ip, sn.ServerPort);
-				ObjectOutputStream oos = new ObjectOutputStream(
-						st.getOutputStream());
-				oos.writeObject(mes);
-				oos.flush();
-				LogRecord.RunningInfoLogger.info("send GET_FINGERPRINT_LIST comand to "+sn.Ip+":"+sn.ServerPort);
-				ConnStoreServerSocketAction socketAction = new ConnStoreServerSocketAction(st);
-				Thread thread = new Thread(socketAction);
-				initFingerprintThreads.put(sn.Ip,socketAction);
-				thread.start();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
-		}
+//		MessageProtocol mes=new MessageProtocol();
+//		mes.messageType= MessageType.GET_FINGERPRINT_LIST;
+//		for(String id:systemConfig.redundancyServerIds){
+//			ServerNode sn=fileConfig.get(id);
+//			try {
+//				Socket st=new Socket(sn.Ip, sn.ServerPort);
+//				ObjectOutputStream oos = new ObjectOutputStream(
+//						st.getOutputStream());
+//				oos.writeObject(mes);
+//				oos.flush();
+//				LogRecord.RunningInfoLogger.info("send GET_FINGERPRINT_LIST comand to "+sn.Ip+":"+sn.ServerPort);
+//				ConnStoreServerSocketAction socketAction = new ConnStoreServerSocketAction(st);
+//				Thread thread = new Thread(socketAction);
+//				initFingerprintThreads.put(sn.Ip,socketAction);
+//				thread.start();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				return false;
+//			}
+//		}
 		return true;
 	}
 	/**
@@ -211,9 +213,9 @@ public class BloomFilter {
 		initHashFunction();
 		LogRecord.RunningInfoLogger.info("init hashFunction successful.");
 		bitset= new BitSet(Slot_SIZE);
-		LogRecord.RunningInfoLogger.info("start load figurePrint.");
-		double num=loadFigurePrint();
-		LogRecord.RunningInfoLogger.info("load figurePrint successful.  total count: " + num);
+//		LogRecord.RunningInfoLogger.info("start load figurePrint.");
+//		double num=loadFigurePrint();
+//		LogRecord.RunningInfoLogger.info("load figurePrint successful.  total count: " + num);
 	}
 
 	/**

@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.json.JSONObject;
 import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
 import pers.sharedFileSystem.bloomFilterManager.hashFunctions.SHA1_MD5;
 import pers.sharedFileSystem.configManager.Config;
@@ -23,10 +27,10 @@ public class Test2 {
 	 */
 	private void isFileExistTest() throws Exception {
 		// Node node = Config.getNodeByNodeId("renderConfig");
-		ServerNode rootNode = Config.getConfig().get("renderNode");
-		String fileName = "config.ini";// buaashuai1.txt
+//		ServerNode rootNode = Config.getConfig().get("renderNode");
+//		String fileName = "config.ini";// buaashuai1.txt
 		// infoLog.txt
-		String filePath = "D:/Hundsun/HsClient";// D:/FileSystemLog/info
+//		String filePath = "D:/Hundsun/HsClient";// D:/FileSystemLog/info
 		// E:/ftpServer
 //		boolean re = AdvancedFileUtil.isFileExist(rootNode, filePath, fileName,
 //				false);
@@ -39,8 +43,8 @@ public class Test2 {
 	 * @throws Exception
 	 */
 	private void isFolderExistTest() throws Exception {
-		ServerNode rootNode = Config.getConfig().get("renderNode");
-		String root = "D:/Hundsun/test";
+//		ServerNode rootNode = Config.getConfig().get("renderNode");
+//		String root = "D:/Hundsun/test";
 //		AdvancedFileUtil.validateDirectory(rootNode, root);
 	}
 
@@ -137,14 +141,19 @@ private void deleteFileTest() throws Exception {
 	 * @throws Exception
 	 */
 	private void configTest() throws Exception {
-		Hashtable<String, ServerNode> config = Config.getConfig();
-		ServerNode serverNode = config.get("tempNode");
-		serverNode.print("");
-		System.out.println("*****************");
-		SystemConfig systemConfig = Config.SYSTEMCONFIG;
-		systemConfig.print("");
-		System.out.println("*****************");
-	}
+//		Hashtable<String, ServerNode> config = Config.getConfig();
+//		ServerNode serverNode = config.get("tempNode");
+//		serverNode.print("");
+//		System.out.println("*****************");
+//		SystemConfig systemConfig = Config.SYSTEMCONFIG;
+//		systemConfig.print("");
+//		System.out.println("*****************");
+//        Gson gson = new Gson();
+//        System.out.println(gson.toJson(systemConfig, SystemConfig.class));
+//        JSONObject obj = new JSONObject(serverNode);
+//        System.out.println(gson.toJson(config));
+//        System.out.println(obj.toString());
+    }
 
 	/**
 	 * 布隆过滤器测试

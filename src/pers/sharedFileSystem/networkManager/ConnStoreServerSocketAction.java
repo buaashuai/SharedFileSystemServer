@@ -125,9 +125,9 @@ public class ConnStoreServerSocketAction implements Runnable {
 			case REPLY_FIND_REDUNDANCY:{
 				return doReplyFindRedundancy(mes);
 			}
-			case REPLY_GET_FINGERPRINT_LIST:{
-				return doReplyGetFingerprintList(mes);
-			}
+//			case REPLY_GET_FINGERPRINT_LIST:{
+//				return doReplyGetFingerprintList(mes);
+//			}
 			default:{
 				return null;
 			}

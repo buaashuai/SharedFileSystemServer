@@ -1,5 +1,7 @@
 package pers.sharedFileSystem.communicationObject;
 
+import pers.sharedFileSystem.entity.SenderType;
+
 import java.io.Serializable;
 import java.util.Hashtable;
 
@@ -12,6 +14,10 @@ public class MessageProtocol implements Serializable {
 	 * 消息类型
 	 */
 	public MessageType messageType;
+	/**
+	 *  发送方类型，1：存储端，2：客户端
+	 */
+	public int senderType;
 	/**
 	 * 消息内容类型(状态码)
 	 */

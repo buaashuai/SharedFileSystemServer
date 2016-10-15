@@ -15,6 +15,7 @@ import pers.sharedFileSystem.communicationObject.MessageType;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
+import pers.sharedFileSystem.entity.SenderType;
 import pers.sharedFileSystem.entity.ServerNode;
 import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.logManager.LogRecord;
@@ -39,6 +40,14 @@ public class SocketAction implements Runnable {
 	 *  接收延迟时间间隔
 	 */
 	private long receiveTimeDelay = 8000;
+	/**
+	 * 如果当前线程是和存储管理子系统的通信，那么此字段是该存储服务器的配置信息
+	 */
+	private ServerNode serverNode =null;
+	/**
+	 * 集群状态
+	 */
+	private ClusterState clusterState = ClusterState.getInstance();
 
 	public SocketAction(Socket s) {
 		this.socket = s;
@@ -52,7 +61,7 @@ public class SocketAction implements Runnable {
 	/**
 	 * 资源目录树配置文件
 	 */
-	private Hashtable<String, ServerNode> fileConfig= Config.getConfig();
+//	private Hashtable<String, ServerNode> fileConfig= Config.getConfig();
 	/**
 	 * 服务端配置文件
 	 */
@@ -70,8 +79,9 @@ public class SocketAction implements Runnable {
 		MessageProtocol mes=new MessageProtocol();
 		mes.messageType=MessageType.FIND_REDUNDANCY;
 		mes.content=fInfo;
-		for(String id:systemConfig.redundancyServerIds){
-			ServerNode sn=fileConfig.get(id);
+//		for(String id:systemConfig.redundancyServerIds){
+		for(ServerNode sn : clusterState.getAllServerNode()){
+//			ServerNode sn=fileConfig.get(id);
 			try {
 				Socket st=new Socket(sn.Ip, sn.ServerPort);
 				ObjectOutputStream oos = new ObjectOutputStream(
@@ -198,7 +208,45 @@ public class SocketAction implements Runnable {
 		}
 		return null;
 	}
-
+	/**
+	 * 处理收到 config 信息
+	 * @param mes
+	 * @return
+	 */
+	private MessageProtocol doSendConfigAction(MessageProtocol mes){
+		ServerNode serverNode=(ServerNode) mes.content;
+		LogRecord.RunningInfoLogger.info("receive config: ");
+		serverNode.print("");
+		String ipPort = serverNode.Ip+":"+serverNode.ServerPort;
+		this.serverNode = serverNode;
+		if(mes.senderType == SenderType.STORE){
+			if(clusterState.getStore(ipPort)==null){
+				clusterState.addServerNode(serverNode);
+				clusterState.addStore(ipPort, this);
+			}
+		}
+		return null;
+	}
+	/**
+	 * 处理收到存储端的指纹信息
+	 * @param mes
+	 * @return
+	 */
+	private MessageProtocol doSendFingerprintAction(MessageProtocol mes){
+		ArrayList<String> fingers=(ArrayList<String>)mes.content;
+		String str="";
+		if(fingers.size()>0) {
+			str="receive SEND_FINGERPRINT_LIST from "+socket.getInetAddress().toString()+" num= "+fingers.size();
+			for(String s:fingers){
+				BloomFilter.getInstance().addFingerPrint(s);
+			}
+			clusterState.addFingerprintNum(fingers.size());
+		}else {
+			str = "SEND_FINGERPRINT_LIST from " + socket.getInetAddress().toString() + " is ended";
+		}
+		LogRecord.RunningInfoLogger.info(str);
+		return null;
+	}
 	/**
 	 * 收到消息之后进行分类处理
 	 * @param mes
@@ -213,8 +261,17 @@ public class SocketAction implements Runnable {
 				return doAddFingerprintAction(mes);
 			}
 			case KEEP_ALIVE:{
-				LogRecord.RunningInfoLogger.info("receive handshake");
+				if(mes.senderType == SenderType.CLIENT)
+					LogRecord.RunningInfoLogger.info("client handshake "+socket.getInetAddress().toString());
+				else if(mes.senderType == SenderType.STORE)
+					LogRecord.RunningInfoLogger.info("store handshake "+socket.getInetAddress().toString());
 				return null;
+			}
+			case SEND_CONFIG:{
+				return doSendConfigAction(mes);
+			}
+			case SEND_FINGERPRINT_LIST:{
+				return doSendFingerprintAction(mes);
 			}
 			default:{
 				return null;
@@ -260,6 +317,9 @@ public class SocketAction implements Runnable {
 	public void overThis() {
 		if (run)
 			run = false;
+		if(serverNode!=null){
+			clusterState.shutDownServerNode(serverNode);
+		}
 		if (socket != null) {
 			try {
 				socket.close();

@@ -12,6 +12,14 @@ public class SystemConfig {
     public Integer Port;
 
     /**
+     *  集群最大元素数
+     */
+    public double MaxElement;
+    /**
+     * 布隆过滤器误报率
+     */
+    public double FalsePositiveRate;
+    /**
      * 需要发送冗余验证消息的存储服务器编号列表
      */
     public List<String>redundancyServerIds;
@@ -27,10 +35,12 @@ public class SystemConfig {
      */
     public void print(String tabs) {
         System.out.println(tabs + "Port: " + Port);
+        System.out.println(tabs + "MaxElement: " + MaxElement);
+        System.out.println(tabs + "FalsePositiveRate: " + FalsePositiveRate);
         System.out.print(tabs + "redundancyServerIds: ");
-        for(String str:redundancyServerIds){
-            System.out.print(str + ",");
-        }
-        System.out.println("");
+//        for(String str:redundancyServerIds){
+//            System.out.print(str + ",");
+//        }
+//        System.out.println("");
     }
 }

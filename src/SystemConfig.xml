@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <SystemConfig>
 		<port>9998</port><!-- 冗余验证服务器的监听端口 -->
-		<redundancyServer>renderNode</redundancyServer><!--需要发送冗余验证消息的存储服务器编号-->
-		<!--<redundancyServer>storeNode</redundancyServer>-->
+		<maxElement>50000000</maxElement><!--最大元素数 -->
+		<falsePositiveRate>0.00001</falsePositiveRate><!--误报率 -->
 </SystemConfig>
