@@ -10,11 +10,9 @@ import java.util.Hashtable;
 import java.util.List;
 
 import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
-import pers.sharedFileSystem.communicationObject.MessageProtocol;
-import pers.sharedFileSystem.communicationObject.MessageType;
+import pers.sharedFileSystem.communicationObject.*;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
-import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.entity.SenderType;
 import pers.sharedFileSystem.entity.ServerNode;
 import pers.sharedFileSystem.entity.SystemConfig;
@@ -37,9 +35,9 @@ public class SocketAction implements Runnable {
 	 */
 	private long lastReceiveTime;
 	/**
-	 *  接收延迟时间间隔
+	 *  接收延迟时间间隔（毫秒）
 	 */
-	private long receiveTimeDelay = 8000;
+	private long receiveTimeDelay = 30000;
 	/**
 	 * 如果当前线程是和存储管理子系统的通信，那么此字段是该存储服务器的配置信息
 	 */
@@ -216,13 +214,13 @@ public class SocketAction implements Runnable {
 	private MessageProtocol doSendConfigAction(MessageProtocol mes){
 		ServerNode serverNode=(ServerNode) mes.content;
 		LogRecord.RunningInfoLogger.info("receive config: ");
-		serverNode.print("");
 		String ipPort = serverNode.Ip+":"+serverNode.ServerPort;
 		this.serverNode = serverNode;
 		if(mes.senderType == SenderType.STORE){
 			if(clusterState.getStore(ipPort)==null){
 				clusterState.addServerNode(serverNode);
 				clusterState.addStore(ipPort, this);
+				serverNode.print("");
 			}
 		}
 		return null;
@@ -247,6 +245,143 @@ public class SocketAction implements Runnable {
 		LogRecord.RunningInfoLogger.info(str);
 		return null;
 	}
+
+	/**
+	 * 将一个消息对象同步发送给socket
+	 *@param  mes 消息对象
+	 */
+	public void sendMessageToStoreServer(MessageProtocol mes) throws IOException {
+		ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+		oos.writeObject(mes);
+		oos.flush();
+	}
+
+	/**
+	 * 获取某个存储目录结点的还未存满的扩容结点
+	 * @return
+	 */
+	private String getIdleExpandDirectoryNodeId(String directoryNodeId){
+		// 开始获取directoryNodeId的扩容文件存储信息
+		ServerNode sn = clusterState.getNodeByNodeId(directoryNodeId).getServerNode();
+		String ipPort = sn.Ip+":"+sn.ServerPort;
+		SocketAction so = clusterState.getStore(ipPort);
+		String expandDirectoryNodeId = "";
+		try {
+			MessageProtocol queryMessage = new MessageProtocol();
+			queryMessage.messageType = MessageType.GET_EXPAND_FILE_STORE_INFO;
+			queryMessage.content=directoryNodeId;
+			so.sendMessageToStoreServer(queryMessage);
+			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+			MessageProtocol replyMessage = (MessageProtocol) ois.readObject();
+			if (replyMessage != null &&replyMessage.messageType==MessageType.REPLY_GET_EXPAND_FILE_STORE_INFO ) {
+				ExpandFileStoreInfo expandFileStoreInfo = (ExpandFileStoreInfo)replyMessage.content;
+				for(String nodeId : expandFileStoreInfo.expandNodeList){
+					// 查看nodeId是否存满，即它是否需要扩容
+					ServerNode sn2 = clusterState.getNodeByNodeId(nodeId).getServerNode();
+					MessageProtocol ifFull = new MessageProtocol();
+					ifFull.messageType = MessageType.IF_DIRECTORY_NEED_EXPAND;
+					ifFull.senderType = SenderType.CLIENT;
+					ifFull.content="";
+					SocketAction saTmp = clusterState.getStore(sn2.Ip+":"+sn2.ServerPort);
+					saTmp.sendMessageToStoreServer(ifFull);
+					Socket soTmp=saTmp.getSocket();
+					ObjectInputStream oisTmp = new ObjectInputStream(soTmp.getInputStream());
+					MessageProtocol replyMessageTmp = (MessageProtocol) oisTmp.readObject();
+					if(replyMessageTmp!=null&&replyMessageTmp.messageType==MessageType.REPLY_IF_DIRECTORY_NEED_EXPAND) {
+						String reply=replyMessage.content.toString();
+						if(reply.equals("0")){
+							expandDirectoryNodeId = nodeId;
+							break;
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e) {
+			LogRecord.RunningErrorLogger.error(e.toString());
+		}
+		return expandDirectoryNodeId;
+	}
+
+	/**
+	 * 从当前集群中获取某台空闲的存储服务器，并返回一个空闲的存储目录编号
+	 * @return
+	 */
+	private String getIdleDirectoryNodeId(){
+		String result = "";
+		// 获取所有存储服务器的运行状态
+		List<ServerState>serverStates = new ArrayList<>();
+		for(ServerNode snn : clusterState.getAllServerNode()){
+			try {
+				MessageProtocol getState = new MessageProtocol();
+				getState.messageType = MessageType.GET_SERVER_STATE;
+				getState.content="";
+				SocketAction saTmp = clusterState.getStore(snn.Ip+":"+snn.ServerPort);
+				saTmp.sendMessageToStoreServer(getState);
+				LogRecord.RunningInfoLogger.info("send GET_SERVER_STATE to "+snn.Ip+":"+snn.ServerPort);
+				Socket soTmp=saTmp.getSocket();
+				ObjectInputStream oisTmp = new ObjectInputStream(soTmp.getInputStream());
+				MessageProtocol replyMessageTmp = (MessageProtocol) oisTmp.readObject();
+				if(replyMessageTmp!=null&&replyMessageTmp.messageType==MessageType.REPLY_GET_SERVER_STATE) {
+					ServerState ss=(ServerState) replyMessageTmp.content;
+					serverStates.add(ss);
+				}
+			}
+			catch (Exception e) {
+				LogRecord.RunningErrorLogger.error(e.toString());
+			}
+		}
+		// 选择一个空闲服务器
+		int index =-1;// 空闲服务器的索引
+		double freeDisk = -1;
+		for(int i=0; i<serverStates.size();i++){
+			if(i==0) {
+				index = i;
+				freeDisk = serverStates.get(i).FreeDisk;
+			}else {
+				if(serverStates.get(i).FreeDisk>freeDisk){
+					index = i;
+					freeDisk = serverStates.get(i).FreeDisk;
+				}
+			}
+		}
+		// 找到了空闲的存储服务器，返回该服务器的一个祖先结点
+		if(index>=0){
+			result = clusterState.getAllServerNode().get(index).ChildNodes.get(0).Id;
+		}
+		return result;
+	}
+	/**
+	 * 处理给某个存储目录结点扩容
+	 * @param mes
+	 * @return 扩容结点的编号
+	 * TODO 这样扩容有个缺点，每个存储接口管理子系统都需要维护整个数据中心的存储目录树结构，否则扩容之后无法把文件保存到指定扩容结点
+	 */
+	private MessageProtocol doGetExpandDirectoryAction(MessageProtocol mes){
+		LogRecord.FileHandleInfoLogger.info("receive GET_EXPAND_DIRECTORY from "+socket.getInetAddress().toString()+":"+socket.getPort());
+		String directoryNodeId=mes.content.toString();//待扩容的存储目录结点
+		MessageProtocol reMessage=new MessageProtocol();
+		String expandDirectoryNodeId = getIdleExpandDirectoryNodeId(directoryNodeId);
+		// 如果已经扩容的结点都存满了，或者之前没有给directoryNodeId扩容过
+		if(CommonUtil.isEmpty(expandDirectoryNodeId)){
+			expandDirectoryNodeId =getIdleDirectoryNodeId();
+			// 如果集群中没有空闲的存储服务器
+			if(CommonUtil.isEmpty(expandDirectoryNodeId)){
+				LogRecord.FileHandleInfoLogger.info("all disk are full.");
+				reMessage.messageCode=4010;
+				reMessage.messageType=MessageType.REPLY_GET_EXPAND_DIRECTORY;
+				return reMessage;
+			}else{
+				LogRecord.FileHandleInfoLogger.info("["+directoryNodeId+"] doesn't expand before, the expand node is"+expandDirectoryNodeId);
+			}
+		}else{
+			LogRecord.FileHandleInfoLogger.info("["+directoryNodeId+"] has expanded before, the expand node "+expandDirectoryNodeId+"is free now");
+		}
+		reMessage.messageCode=4000;
+		reMessage.messageType=MessageType.REPLY_GET_EXPAND_DIRECTORY;
+		reMessage.content=expandDirectoryNodeId;
+		return reMessage;
+	}
 	/**
 	 * 收到消息之后进行分类处理
 	 * @param mes
@@ -262,9 +397,9 @@ public class SocketAction implements Runnable {
 			}
 			case KEEP_ALIVE:{
 				if(mes.senderType == SenderType.CLIENT)
-					LogRecord.RunningInfoLogger.info("client handshake "+socket.getInetAddress().toString());
+					LogRecord.RunningInfoLogger.info("client handshake "+socket.getInetAddress().toString()+":"+socket.getPort());
 				else if(mes.senderType == SenderType.STORE)
-					LogRecord.RunningInfoLogger.info("store handshake "+socket.getInetAddress().toString());
+					LogRecord.RunningInfoLogger.info("store handshake "+socket.getInetAddress().toString()+":"+socket.getPort());
 				return null;
 			}
 			case SEND_CONFIG:{
@@ -273,6 +408,9 @@ public class SocketAction implements Runnable {
 			case SEND_FINGERPRINT_LIST:{
 				return doSendFingerprintAction(mes);
 			}
+			case GET_EXPAND_DIRECTORY:{
+				return doGetExpandDirectoryAction(mes);
+			}
 			default:{
 				return null;
 			}
@@ -280,6 +418,9 @@ public class SocketAction implements Runnable {
 
 	}
 
+	public Socket getSocket(){
+		return socket;
+	}
 	public void run() {
 		while (run) {
 			// 超过接收延迟时间（毫秒）之后，终止此客户端的连接
@@ -318,7 +459,7 @@ public class SocketAction implements Runnable {
 		if (run)
 			run = false;
 		if(serverNode!=null){
-			clusterState.shutDownServerNode(serverNode);
+//			clusterState.shutDownServerNode(serverNode);
 		}
 		if (socket != null) {
 			try {

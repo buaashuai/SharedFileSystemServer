@@ -52,7 +52,6 @@ public class ConnWatchDog implements Runnable {
 			try {
 				serverSocket.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		for (SocketAction socketAction : threads.keySet()) {
@@ -81,7 +80,6 @@ public class ConnWatchDog implements Runnable {
 				try {
 					serverSocket.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		}

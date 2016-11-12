@@ -1,8 +1,12 @@
 package pers.sharedFileSystem.networkManager;
 
+import pers.sharedFileSystem.convenientUtil.CommonUtil;
+import pers.sharedFileSystem.entity.Node;
 import pers.sharedFileSystem.entity.ServerNode;
+import pers.sharedFileSystem.logManager.LogRecord;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,6 +67,7 @@ public class ClusterState {
      * @param serverNode
      */
     public void addServerNode(ServerNode serverNode){
+        LogRecord.FileHandleInfoLogger.info("add new serverNode "+ serverNode.Ip+":"+serverNode.ServerPort);
         serverNodeList.put(serverNode.Id, serverNode);
     }
 
@@ -133,5 +138,27 @@ public class ClusterState {
      */
     public double getFingerprintNum(){
         return fingerprintNum;
+    }
+
+    /**
+     * 根据节点id获取它所属的Node对象
+     *
+     * @param nodeId
+     *            目录节点Id
+     */
+    public Node getNodeByNodeId(String nodeId) {
+        try {
+            if (serverNodeList.keySet().contains(nodeId)) {
+                return serverNodeList.get(nodeId);
+            }
+            Collection<ServerNode> serverNodes = serverNodeList.values();
+            for (ServerNode r : serverNodes) {
+                if (r.DirectoryNodeTable.containsKey(nodeId))
+                    return r.DirectoryNodeTable.get(nodeId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

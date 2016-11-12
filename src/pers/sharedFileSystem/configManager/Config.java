@@ -44,7 +44,6 @@ public class Config {
 			configParse.parseSystemConfig();
 			LogRecord.RunningInfoLogger.info("parse SystemConfig.xml successful.");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -24,6 +24,14 @@ public class CommonUtil {
 	}
 
 	/**
+	 * 判断字符串是否是空
+	 * @param string
+	 * @return 字符串是null 或者空字符串 则返回true
+	 */
+	public static boolean isEmpty(String string){
+		return string == null || string.isEmpty();
+	}
+	/**
 	 * 深层拷贝 - 需要类继承序列化接口
 	 * 
 	 * @param <T>
