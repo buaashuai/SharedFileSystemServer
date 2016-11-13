@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
 import pers.sharedFileSystem.communicationObject.*;
@@ -220,7 +221,6 @@ public class SocketAction implements Runnable {
 			if(clusterState.getStore(ipPort)==null){
 				clusterState.addServerNode(serverNode);
 				clusterState.addStore(ipPort, this);
-				serverNode.print("");
 			}
 		}
 		return null;
@@ -257,7 +257,7 @@ public class SocketAction implements Runnable {
 	}
 
 	/**
-	 * 获取某个存储目录结点的还未存满的扩容结点
+	 * 获取某个存储目录结点的还未存满的扩容结点，同步执行
 	 * @return
 	 */
 	private String getIdleExpandDirectoryNodeId(String directoryNodeId){
@@ -271,27 +271,32 @@ public class SocketAction implements Runnable {
 			queryMessage.messageType = MessageType.GET_EXPAND_FILE_STORE_INFO;
 			queryMessage.content=directoryNodeId;
 			so.sendMessageToStoreServer(queryMessage);
-			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+			LogRecord.RunningInfoLogger.info("send GET_EXPAND_FILE_STORE_INFO to "+ipPort);
+			ObjectInputStream ois = new ObjectInputStream(so.getSocket().getInputStream());
 			MessageProtocol replyMessage = (MessageProtocol) ois.readObject();
-			if (replyMessage != null &&replyMessage.messageType==MessageType.REPLY_GET_EXPAND_FILE_STORE_INFO ) {
-				ExpandFileStoreInfo expandFileStoreInfo = (ExpandFileStoreInfo)replyMessage.content;
-				for(String nodeId : expandFileStoreInfo.expandNodeList){
-					// 查看nodeId是否存满，即它是否需要扩容
-					ServerNode sn2 = clusterState.getNodeByNodeId(nodeId).getServerNode();
-					MessageProtocol ifFull = new MessageProtocol();
-					ifFull.messageType = MessageType.IF_DIRECTORY_NEED_EXPAND;
-					ifFull.senderType = SenderType.CLIENT;
-					ifFull.content="";
-					SocketAction saTmp = clusterState.getStore(sn2.Ip+":"+sn2.ServerPort);
-					saTmp.sendMessageToStoreServer(ifFull);
-					Socket soTmp=saTmp.getSocket();
-					ObjectInputStream oisTmp = new ObjectInputStream(soTmp.getInputStream());
-					MessageProtocol replyMessageTmp = (MessageProtocol) oisTmp.readObject();
-					if(replyMessageTmp!=null&&replyMessageTmp.messageType==MessageType.REPLY_IF_DIRECTORY_NEED_EXPAND) {
-						String reply=replyMessage.content.toString();
-						if(reply.equals("0")){
-							expandDirectoryNodeId = nodeId;
-							break;
+			if (replyMessage != null  ) {
+				LogRecord.RunningInfoLogger.info("receive REPLY_GET_EXPAND_FILE_STORE_INFO, "+replyMessage.messageCode);
+				if (replyMessage.messageType==MessageType.REPLY_GET_EXPAND_FILE_STORE_INFO&&replyMessage.messageCode == 4000){
+					ArrayList<String> expandNodeList = (ArrayList<String>) replyMessage.content;
+					for (String nodeId : expandNodeList) {
+						// 查看nodeId是否存满，即它是否需要扩容
+						ServerNode sn2 = clusterState.getNodeByNodeId(nodeId).getServerNode();
+						MessageProtocol ifFull = new MessageProtocol();
+						ifFull.messageType = MessageType.IF_DIRECTORY_NEED_EXPAND;
+						ifFull.senderType = SenderType.CLIENT;
+						ifFull.content = "";
+						String ipPort2=sn2.Ip + ":" + sn2.ServerPort;
+						SocketAction saTmp = clusterState.getStore(ipPort2);
+						saTmp.sendMessageToStoreServer(ifFull);
+						LogRecord.RunningInfoLogger.info("send IF_DIRECTORY_NEED_EXPAND to "+ipPort2);
+						ObjectInputStream oisTmp = new ObjectInputStream(saTmp.getSocket().getInputStream());
+						MessageProtocol replyMessageTmp = (MessageProtocol) oisTmp.readObject();
+						if (replyMessageTmp != null && replyMessageTmp.messageType == MessageType.REPLY_IF_DIRECTORY_NEED_EXPAND) {
+							String reply = replyMessage.content.toString();
+							if (reply.equals("0")) {
+								expandDirectoryNodeId = nodeId;
+								break;
+							}
 						}
 					}
 				}
@@ -314,15 +319,15 @@ public class SocketAction implements Runnable {
 		for(ServerNode snn : clusterState.getAllServerNode()){
 			try {
 				MessageProtocol getState = new MessageProtocol();
-				getState.messageType = MessageType.GET_SERVER_STATE;
+				getState.messageType = MessageType.GET_FREE_SERVER_STATE;
 				getState.content="";
 				SocketAction saTmp = clusterState.getStore(snn.Ip+":"+snn.ServerPort);
 				saTmp.sendMessageToStoreServer(getState);
-				LogRecord.RunningInfoLogger.info("send GET_SERVER_STATE to "+snn.Ip+":"+snn.ServerPort);
-				Socket soTmp=saTmp.getSocket();
-				ObjectInputStream oisTmp = new ObjectInputStream(soTmp.getInputStream());
+				LogRecord.RunningInfoLogger.info("send GET_FREE_SERVER_STATE to "+snn.Ip+":"+snn.ServerPort);
+				ObjectInputStream oisTmp = new ObjectInputStream(saTmp.getSocket().getInputStream());
 				MessageProtocol replyMessageTmp = (MessageProtocol) oisTmp.readObject();
-				if(replyMessageTmp!=null&&replyMessageTmp.messageType==MessageType.REPLY_GET_SERVER_STATE) {
+				LogRecord.RunningInfoLogger.info("receive "+replyMessageTmp.messageType);
+				if(replyMessageTmp!=null&&replyMessageTmp.messageType==MessageType.REPLY_FREE_GET_SERVER_STATE&&replyMessageTmp.messageCode==4000) {
 					ServerState ss=(ServerState) replyMessageTmp.content;
 					serverStates.add(ss);
 				}
@@ -355,7 +360,7 @@ public class SocketAction implements Runnable {
 	 * 处理给某个存储目录结点扩容
 	 * @param mes
 	 * @return 扩容结点的编号
-	 * TODO 这样扩容有个缺点，每个存储接口管理子系统都需要维护整个数据中心的存储目录树结构，否则扩容之后无法把文件保存到指定扩容结点
+	 * TODO 这样扩容有个缺点，每个存储接口管理子系统都需要维护整个数据中心的存储目录树结构，否则扩容之后无法把文件保存到指定扩容结点，这个方法必须改造成同步执行
 	 */
 	private MessageProtocol doGetExpandDirectoryAction(MessageProtocol mes){
 		LogRecord.FileHandleInfoLogger.info("receive GET_EXPAND_DIRECTORY from "+socket.getInetAddress().toString()+":"+socket.getPort());
@@ -364,6 +369,7 @@ public class SocketAction implements Runnable {
 		String expandDirectoryNodeId = getIdleExpandDirectoryNodeId(directoryNodeId);
 		// 如果已经扩容的结点都存满了，或者之前没有给directoryNodeId扩容过
 		if(CommonUtil.isEmpty(expandDirectoryNodeId)){
+			LogRecord.FileHandleInfoLogger.info("["+directoryNodeId+"] doesn't expand before or all the ExpandNodes are full now");
 			expandDirectoryNodeId =getIdleDirectoryNodeId();
 			// 如果集群中没有空闲的存储服务器
 			if(CommonUtil.isEmpty(expandDirectoryNodeId)){
@@ -372,10 +378,10 @@ public class SocketAction implements Runnable {
 				reMessage.messageType=MessageType.REPLY_GET_EXPAND_DIRECTORY;
 				return reMessage;
 			}else{
-				LogRecord.FileHandleInfoLogger.info("["+directoryNodeId+"] doesn't expand before, the expand node is"+expandDirectoryNodeId);
+				LogRecord.FileHandleInfoLogger.info("["+directoryNodeId+"] doesn't expand before, the expand node is ["+expandDirectoryNodeId+"]");
 			}
 		}else{
-			LogRecord.FileHandleInfoLogger.info("["+directoryNodeId+"] has expanded before, the expand node "+expandDirectoryNodeId+"is free now");
+			LogRecord.FileHandleInfoLogger.info("["+directoryNodeId+"] has expanded before, the expand node ["+expandDirectoryNodeId+"] is free now");
 		}
 		reMessage.messageCode=4000;
 		reMessage.messageType=MessageType.REPLY_GET_EXPAND_DIRECTORY;
@@ -421,6 +427,7 @@ public class SocketAction implements Runnable {
 	public Socket getSocket(){
 		return socket;
 	}
+
 	public void run() {
 		while (run) {
 			// 超过接收延迟时间（毫秒）之后，终止此客户端的连接
@@ -459,7 +466,7 @@ public class SocketAction implements Runnable {
 		if (run)
 			run = false;
 		if(serverNode!=null){
-//			clusterState.shutDownServerNode(serverNode);
+			clusterState.shutDownServerNode(serverNode);
 		}
 		if (socket != null) {
 			try {

@@ -67,7 +67,7 @@ public class ClusterState {
      * @param serverNode
      */
     public void addServerNode(ServerNode serverNode){
-        LogRecord.FileHandleInfoLogger.info("add new serverNode "+ serverNode.Ip+":"+serverNode.ServerPort);
+        LogRecord.FileHandleInfoLogger.info("add new serverNode "+ serverNode.Ip+":"+serverNode.ServerPort+" ["+serverNode.Id+"]");
         serverNodeList.put(serverNode.Id, serverNode);
     }
 
