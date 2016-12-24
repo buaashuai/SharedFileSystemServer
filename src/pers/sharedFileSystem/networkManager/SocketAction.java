@@ -435,22 +435,22 @@ public class SocketAction implements Runnable {
 				overThis();
 			} else {
 				try {
-					InputStream in = socket.getInputStream();
-					if (in.available() > 0) {
-						ObjectInputStream ois = new ObjectInputStream(in);
-						Object obj = ois.readObject();
-						MessageProtocol mes=(MessageProtocol)obj;
-						lastReceiveTime = System.currentTimeMillis();
-						MessageProtocol out = doAction(mes);// 处理消息，并给客户端反馈
-						if (out != null) {
-							ObjectOutputStream oos = new ObjectOutputStream(
-									socket.getOutputStream());
-							oos.writeObject(out);
-							oos.flush();
-						}
-					} else {
-						Thread.sleep(10);
-					}
+                        InputStream in = socket.getInputStream();
+                        if (in.available() > 0) {
+                            ObjectInputStream ois = new ObjectInputStream(in);
+                            Object obj = ois.readObject();
+                            MessageProtocol mes = (MessageProtocol) obj;
+                            lastReceiveTime = System.currentTimeMillis();
+                            MessageProtocol out = doAction(mes);// 处理消息，并给客户端反馈
+                            if (out != null) {
+                                ObjectOutputStream oos = new ObjectOutputStream(
+                                        socket.getOutputStream());
+                                oos.writeObject(out);
+                                oos.flush();
+                            }
+                        } else {
+                            Thread.sleep(10);
+                        }
 				} catch (Exception e) {
 					e.printStackTrace();
 					overThis();

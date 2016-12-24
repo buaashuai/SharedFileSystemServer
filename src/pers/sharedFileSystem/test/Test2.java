@@ -1,11 +1,8 @@
 package pers.sharedFileSystem.test;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -158,7 +155,7 @@ private void deleteFileTest() throws Exception {
 	/**
 	 * 布隆过滤器测试
 	 */
-	private void BloomFilterTest(){
+	private void bloomFilterTest(){
 		BloomFilter bloomFilter=BloomFilter.getInstance();
 		boolean flag=bloomFilter.isFingerPrintExist("123");
 		System.out.println(flag);
@@ -166,7 +163,69 @@ private void deleteFileTest() throws Exception {
 		flag=bloomFilter.isFingerPrintExist("123");
 		System.out.println(flag);
 	}
+    /**
+     * 读取MD5
+     * @param fullPath MD5所在绝对路径
+     */
+    private List<String> readMd5FromFile(String fullPath){
+        List<String> result=new ArrayList<>();
+        File newFile=new File(fullPath);
+        FileReader fileReader=null;
+        BufferedReader bufferedReader=null;
+        int index=1;
+        try{
+            fileReader=new FileReader(newFile);
+            bufferedReader=new BufferedReader(fileReader);
+            try{
+                String read=null;
+                while((read=bufferedReader.readLine())!=null&&!read.isEmpty()){
+                    result.add(read);
+//                    System.out.println(index+": "+read);
+                    index++;
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try {
+                if(bufferedReader!=null){
+                        bufferedReader.close();
+                }
+                if(fileReader!=null){
+                    fileReader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
 
+    /**
+     * 布隆过滤器检测成功率测试
+     * @param file_num
+     * @param redundancy_num
+     */
+	private void bloomFilterDetermineTest(int file_num, int redundancy_num){
+        List<String> fingers = readMd5FromFile("E:/test/md5_150000.txt");
+        BloomFilter bloomFilter=BloomFilter.getInstance();
+        bloomFilter.initBloomFilter();
+        for(int i=0; i<file_num;i++){
+            bloomFilter.addFingerPrint(fingers.get(i));
+        }
+        Random random = new Random();
+        int num = 0;
+        for(int i=0; i<file_num; i++){
+            int number = random.nextInt(149999-file_num)+file_num;
+            boolean flag = bloomFilter.isFingerPrintExist(fingers.get(number));
+            if(flag){
+                num++;
+            }
+        }
+        System.out.println("num="+num);
+    }
 	/**
 	 * MD5生成测试
 	 */
@@ -200,7 +259,8 @@ private void deleteFileTest() throws Exception {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Test2 test2 = new Test2();
-		test2.configTest();
+//		test2.configTest();
+        test2.bloomFilterDetermineTest(5000,0);
 	}
 
 }
