@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
 import pers.sharedFileSystem.communicationObject.*;
@@ -31,6 +30,11 @@ public class SocketAction implements Runnable {
 	 * 该线程是否正在监听
 	 */
 	private boolean run = true;
+    /**
+     * 线程是否暂停监听
+     * TODO 为了使线程能够同步获取消息，临时采用这个字段暂停socket的监听
+     */
+	private volatile boolean pause = false;
 	/**
 	 * 最近一次收到客户端发来信息的时间
 	 */
@@ -271,8 +275,10 @@ public class SocketAction implements Runnable {
 			queryMessage.messageType = MessageType.GET_EXPAND_FILE_STORE_INFO;
 			queryMessage.content=directoryNodeId;
 			so.sendMessageToStoreServer(queryMessage);
+            so.pauseGetStream();// 同步执行之前，先暂停该线程的主轮询过程
 			LogRecord.RunningInfoLogger.info("send GET_EXPAND_FILE_STORE_INFO to "+ipPort);
 			ObjectInputStream ois = new ObjectInputStream(so.getSocket().getInputStream());
+            so.cancelPauseGetStream();// 同步执行后，继续该线程的主轮询过程
 			MessageProtocol replyMessage = (MessageProtocol) ois.readObject();
 			if (replyMessage != null  ) {
 				LogRecord.RunningInfoLogger.info("receive REPLY_GET_EXPAND_FILE_STORE_INFO, "+replyMessage.messageCode);
@@ -288,8 +294,10 @@ public class SocketAction implements Runnable {
 						String ipPort2=sn2.Ip + ":" + sn2.ServerPort;
 						SocketAction saTmp = clusterState.getStore(ipPort2);
 						saTmp.sendMessageToStoreServer(ifFull);
-						LogRecord.RunningInfoLogger.info("send IF_DIRECTORY_NEED_EXPAND to "+ipPort2);
+                        saTmp.pauseGetStream();// 同步执行之前，先暂停该线程的主轮询过程
+                        LogRecord.RunningInfoLogger.info("send IF_DIRECTORY_NEED_EXPAND to "+ipPort2);
 						ObjectInputStream oisTmp = new ObjectInputStream(saTmp.getSocket().getInputStream());
+                        saTmp.cancelPauseGetStream();// 同步执行后，继续该线程的主轮询过程
 						MessageProtocol replyMessageTmp = (MessageProtocol) oisTmp.readObject();
 						if (replyMessageTmp != null && replyMessageTmp.messageType == MessageType.REPLY_IF_DIRECTORY_NEED_EXPAND) {
 							String reply = replyMessage.content.toString();
@@ -321,13 +329,16 @@ public class SocketAction implements Runnable {
 				MessageProtocol getState = new MessageProtocol();
 				getState.messageType = MessageType.GET_FREE_SERVER_STATE;
 				getState.content="";
+				// GET_FREE_SERVER_STATE的消息需要同步执行
 				SocketAction saTmp = clusterState.getStore(snn.Ip+":"+snn.ServerPort);
 				saTmp.sendMessageToStoreServer(getState);
+				saTmp.pauseGetStream();// 同步执行之前，先暂停该线程的主轮询过程
 				LogRecord.RunningInfoLogger.info("send GET_FREE_SERVER_STATE to "+snn.Ip+":"+snn.ServerPort);
 				ObjectInputStream oisTmp = new ObjectInputStream(saTmp.getSocket().getInputStream());
+                saTmp.cancelPauseGetStream();// 同步执行后，继续该线程的主轮询过程
 				MessageProtocol replyMessageTmp = (MessageProtocol) oisTmp.readObject();
 				LogRecord.RunningInfoLogger.info("receive "+replyMessageTmp.messageType);
-				if(replyMessageTmp!=null&&replyMessageTmp.messageType==MessageType.REPLY_FREE_GET_SERVER_STATE&&replyMessageTmp.messageCode==4000) {
+				if(replyMessageTmp!=null&&replyMessageTmp.messageType==MessageType.REPLY_FREE_GET_SERVER_STATE &&replyMessageTmp.messageCode==4000) {
 					ServerState ss=(ServerState) replyMessageTmp.content;
 					serverStates.add(ss);
 				}
@@ -428,36 +439,53 @@ public class SocketAction implements Runnable {
 		return socket;
 	}
 
+    /**
+     * 暂停轮询客户端的socket消息
+     */
+	public synchronized void pauseGetStream(){
+	    this.pause = true;
+    }
+    /**
+     * 取消暂停轮询客户端的socket消息
+     */
+    public synchronized void cancelPauseGetStream(){
+        this.pause = false;
+    }
 	public void run() {
-		while (run) {
-			// 超过接收延迟时间（毫秒）之后，终止此客户端的连接
-			if (System.currentTimeMillis() - lastReceiveTime > receiveTimeDelay) {
-				overThis();
-			} else {
-				try {
-                        InputStream in = socket.getInputStream();
-                        if (in.available() > 0) {
-                            ObjectInputStream ois = new ObjectInputStream(in);
-                            Object obj = ois.readObject();
-                            MessageProtocol mes = (MessageProtocol) obj;
-                            lastReceiveTime = System.currentTimeMillis();
-                            MessageProtocol out = doAction(mes);// 处理消息，并给客户端反馈
-                            if (out != null) {
-                                ObjectOutputStream oos = new ObjectOutputStream(
-                                        socket.getOutputStream());
-                                oos.writeObject(out);
-                                oos.flush();
-                            }
-                        } else {
-                            Thread.sleep(10);
+        while (run) {
+            // 超过接收延迟时间（毫秒）之后，终止此客户端的连接
+            if (System.currentTimeMillis() - lastReceiveTime > receiveTimeDelay) {
+                overThis();
+            } else {
+                try {
+                    // 有些获取 socket 消息的方法需要同步执行，因此在同步执行的方法中会把主线程的轮询设置为“暂停"状态，防止 socket 的 io 流被主线程捕获到，导致同步方法报错
+                    if (pause) {
+                        Thread.sleep(10);
+                        continue;
+                    }
+                    InputStream in = socket.getInputStream();
+                    if (in.available() > 0) {
+                        ObjectInputStream ois = new ObjectInputStream(in);
+                        Object obj = ois.readObject();
+                        MessageProtocol mes = (MessageProtocol) obj;
+                        lastReceiveTime = System.currentTimeMillis();
+                        MessageProtocol out = doAction(mes);// 处理消息，并给客户端反馈
+                        if (out != null) {
+                            ObjectOutputStream oos = new ObjectOutputStream(
+                                    socket.getOutputStream());
+                            oos.writeObject(out);
+                            oos.flush();
                         }
-				} catch (Exception e) {
-					e.printStackTrace();
-					overThis();
-				}
-			}
-		}
-	}
+                    } else {
+                        Thread.sleep(10);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    overThis();
+                }
+            }
+        }
+    }
 
 	/**
 	 * 关闭此socket连接，停止对该连接的监听
