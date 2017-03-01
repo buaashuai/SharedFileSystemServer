@@ -460,7 +460,7 @@ public class SocketAction implements Runnable {
                 try {
                     // 有些获取 socket 消息的方法需要同步执行，因此在同步执行的方法中会把主线程的轮询设置为“暂停"状态，防止 socket 的 io 流被主线程捕获到，导致同步方法报错
                     if (pause) {
-                        Thread.sleep(10);
+                        Thread.sleep(1000);// 暂停时间需要确保其他操作能够执行结束，否则socket会报错
                         continue;
                     }
                     InputStream in = socket.getInputStream();
